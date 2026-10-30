@@ -79,7 +79,7 @@ body {
   color: var(--tx);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   padding: 16px;
-  padding-bottom: 96px; /* Space for bottom nav bar */
+  padding-bottom: 96px;
   max-width: 560px;
   margin-inline: auto;
   transition: background 0.3s, color 0.3s;
@@ -404,6 +404,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   margin-top: 8px !important;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
   border: 1px solid rgba(96, 165, 250, 0.3) !important;
+  font-weight: 700 !important;
 }
 .voice-entry-btn:active {
   transform: scale(0.98);
@@ -676,7 +677,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   </div>
 </div>
 
-<!-- Header (Always Visible) -->
+<!-- Header (Always Visible on Top) -->
 <div class="hd">
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95">
     <span style="display:inline-flex;align-items:center;gap:8px;font-weight:700">
@@ -685,8 +686,9 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     </span>
     <span style="display:flex;align-items:center;gap:4px">
       <span id="clk"></span>
-      <button id="btn-replay-splash" title="Replay Opening Animation" style="width:auto;margin:0;padding:3px 9px;background:rgba(255,255,255,.2);border-radius:8px;font-size:13px;border:1px solid rgba(255,255,255,0.25)">✨ Splash</button>
-      <button id="eye" title="Hide/Show Balance" style="width:auto;margin:0;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:8px;font-size:13px;border:1px solid rgba(255,255,255,0.25)">👁️</button>
+      <button id="btn-header-update" title="Check for Updates" style="width:auto;margin:0;padding:3px 8px;background:rgba(16,185,129,0.3);border:1px solid rgba(52,211,153,0.5);border-radius:8px;font-size:12px;color:#a7f3d0;font-weight:600">🔄 Update</button>
+      <button id="btn-replay-splash" title="Replay Opening Animation" style="width:auto;margin:0;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:8px;font-size:12px;border:1px solid rgba(255,255,255,0.25)">✨ Splash</button>
+      <button id="eye" title="Hide/Show Balance" style="width:auto;margin:0;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:8px;font-size:12px;border:1px solid rgba(255,255,255,0.25)">👁️</button>
     </span>
   </div>
   <div style="font-size:12px;opacity:.8;margin-top:14px;letter-spacing:0.3px">Total savings (అన్ని గోల్స్ కలిపి)</div>
@@ -695,7 +697,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 </div>
 
 <!-- ==========================================================
-     VIEW 1: HOME (Goals, Balance, Pay to Savings & Voice Entry)
+     VIEW 1: HOME (Goals, Balance, Pay to Savings & Automatic Voice Entry)
 ========================================================== -->
 <div id="view-home" class="app-view on">
   <div id="tabs"></div>
@@ -740,13 +742,13 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     </div>
     <div class="row" style="margin-top:8px"><select id="src" style="flex:1"><option>💵 Cash</option><option>📲 UPI</option><option>🏦 Bank</option></select><select id="md" style="flex:1"><option>😀</option><option>😐</option><option>😞</option></select></div>
     
-    <!-- Primary Pay to Savings Button -->
+    <!-- Pay to Savings button -->
     <button id="add">Pay to Savings ✅</button>
     
-    <!-- Voice Entry Button directly under Pay to Savings -->
+    <!-- Instant Voice Entry button (Auto-adds directly without keypad!) -->
     <button id="vb_quick" type="button" class="voice-entry-btn">
       <span style="font-size:18px">🎤</span>
-      <span>Voice Entry (నోటితో చెప్పి Add చేయండి)</span>
+      <span>Voice Entry (నోటితో చెప్పగానే Automatic గా Add అవుతుంది)</span>
     </button>
   </div>
 
@@ -881,9 +883,23 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 </div>
 
 <!-- ==========================================================
-     VIEW 5: SETTINGS (Goal Color Bar, Rules, Theme, PIN, Profile)
+     VIEW 5: SETTINGS (App Update Card on TOP, Goal Color Bar, Rules, Theme, PIN, Profile)
 ========================================================== -->
 <div id="view-settings" class="app-view">
+  <!-- Prominent App Update Card on TOP of Settings -->
+  <div class="card" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); border: 1px solid #34d399; box-shadow: 0 8px 24px rgba(5,150,105,0.35);">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <b style="font-size:16px; color:#fff;">🔄 App Updates (తాజా అప్‌డేట్‌లు)</b>
+        <div style="font-size:12px; color:#a7f3d0; margin-top:3px;">Version 2.0 · Live from GitHub</div>
+      </div>
+      <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; color:#fff;">NEW</span>
+    </div>
+    <button id="chk-update" style="margin-top:12px; background:#fff; color:#065f46; font-weight:700; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; gap:8px;">
+      <span>⚡</span> Update App Now (కొత్త వెర్షన్‌కి అప్‌డేట్ చేయండి)
+    </button>
+  </div>
+
   <!-- Goal Colors Palette Bar with More Vibrant Colors -->
   <div class="card">
     <b>🎨 Goal Colors (రంగుల ఎంపిక)</b>
@@ -935,9 +951,6 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
       <button id="bt" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🔠 Big text</button>
       <button id="vb" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🎤 Voice test</button>
     </div>
-    <button id="chk-update" style="margin-top:10px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;gap:8px">
-      <span>🔄</span> Check & Install Update (యాప్ అప్‌డేట్ చేయండి)
-    </button>
   </div>
 </div>
 
@@ -1083,7 +1096,6 @@ function sayMaheshStyle(text) {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-    // Prioritize Indian English / Telugu voices
     const inVoice = voices.find(v => v.lang === "te-IN") ||
                     voices.find(v => v.lang.includes("IN") && (v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("ravi") || v.name.toLowerCase().includes("mohan") || v.name.toLowerCase().includes("prabhat"))) ||
                     voices.find(v => v.lang.includes("IN")) ||
@@ -1102,14 +1114,59 @@ function sayMaheshStyle(text) {
   }
 }
 
-// Fallback say function
 function say(t) {
   sayMaheshStyle(t);
 }
 
 // ==========================================================
-// VOICE ENTRY (Under Pay to Savings)
+// DIRECT AUTOMATIC VOICE ENTRY (Adds directly without touching keypad!)
 // ==========================================================
+function addVoiceEntryDirect(amt, spokenText) {
+  if (!(amt > 0)) return;
+  const g = G();
+  const before = tot(g);
+  const t = "SB" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
+  const tmv = nowT();
+  const note = spokenText ? ("Voice: " + spokenText) : "Voice save";
+  
+  // Add directly to entries immediately
+  g.entries.push({
+    id: Date.now(),
+    date: TD,
+    time: tmv,
+    amt: amt,
+    note: note,
+    txn: t,
+    src: $("src") ? $("src").value : "💵 Cash",
+    md: $("md") ? $("md").value : "😀"
+  });
+  
+  save();
+  cur = "";
+  upd();
+  if ($("note")) $("note").value = "";
+  render();
+  
+  // Show celebration screen
+  const done = before < g.target && tot(g) >= g.target;
+  count($("okamt"), amt);
+  $("oktx").textContent = "Txn ID: " + t + " · " + TD + " · " + h12(tmv);
+  $("okmsg").textContent = done ? ("🎉 Target complete! " + g.name + " ready") : ("Savings Bank ki add ayindi → " + g.emoji + " " + g.name);
+  $("ok").classList.add("on");
+  chime();
+  
+  const ms = [100, 250, 500, 1000, 2500, 5000].find(m => before < m && tot(g) >= m);
+  if (ms) $("okmsg").textContent = "🏆 Milestone ₹" + ms + " reached! " + g.name;
+  if (done || ms) rain(["🎉", "🎊", "⭐", "🪙", "💰"], 60);
+  else rain(["💸", "🪙", "💰", "💵"], 32);
+  
+  // Mahesh Babu Voice Commentary
+  const uObj = users()[U] || {};
+  const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+  const maheshDialogue = `${amt} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
+  sayMaheshStyle(maheshDialogue);
+}
+
 function startVoiceEntry() {
   const R = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!R) return alert("Ee browser lo voice recognition support ledu. Google Chrome vaadandi.");
@@ -1131,7 +1188,7 @@ function startVoiceEntry() {
     
     let m = transcript.match(/\d+(\.\d+)?/);
     if (!m) {
-      const words = { "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "hundred": 100, "five hundred": 500, "thousand": 1000, "padi": 10, "iravai": 20, "muppai": 30, "yaabhai": 50, "vandha": 100, "veyyi": 1000 };
+      const words = { "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "hundred": 100, "two hundred": 200, "five hundred": 500, "thousand": 1000, "padi": 10, "iravai": 20, "muppai": 30, "yaabhai": 50, "vandha": 100, "veyyi": 1000 };
       const low = transcript.toLowerCase();
       for (const [k, v] of Object.entries(words)) {
         if (low.includes(k)) { m = [String(v)]; break; }
@@ -1139,11 +1196,11 @@ function startVoiceEntry() {
     }
     
     if (m) {
-      cur = m[0];
-      upd();
-      $("note").value = "Voice: " + transcript;
-      beep();
-      $("add").focus();
+      const amount = parseFloat(m[0]);
+      if (amount > 0) {
+        // AUTOMATIC INSTANT SAVE DIRECTLY (Keypad loki vellakunda!)
+        addVoiceEntryDirect(amount, transcript);
+      }
     } else {
       alert("Amount అర్థం కాలేదు. '50 rupees' లేదా '100' అని స్పష్టంగా చెప్పండి.");
     }
@@ -1525,10 +1582,32 @@ $("btn-replay-splash").onclick = () => {
   runSplashScreen(true);
 };
 
-runSplashScreen(true);
+// ==========================================================
+// APP UPDATE ENGINE (Clear cache & auto-reload)
+// ==========================================================
+const triggerAppUpdate = async () => {
+  const btn = $("chk-update");
+  const hbtn = $("btn-header-update");
+  if (btn) btn.textContent = "⏳ Updating to latest version...";
+  if (hbtn) hbtn.textContent = "⏳ Updating...";
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (let r of regs) await r.update();
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch(e) {}
+  window.location.reload(true);
+};
 
-// Auto-update and registration
-if("serviceWorker" in navigator) {
+if ($("chk-update")) $("chk-update").onclick = triggerAppUpdate;
+if ($("btn-header-update")) $("btn-header-update").onclick = triggerAppUpdate;
+
+// Auto-reload when new service worker takes over
+if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").then(reg => {
     reg.onupdatefound = () => {
       const w = reg.installing;
@@ -1546,21 +1625,7 @@ if("serviceWorker" in navigator) {
   });
 }
 
-$("chk-update").onclick = async () => {
-  const btn = $("chk-update");
-  btn.textContent = "⏳ Updating to latest version...";
-  try {
-    if ("serviceWorker" in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (let r of regs) await r.update();
-    }
-    if (window.caches) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-  } catch(e) {}
-  window.location.reload(true);
-};
+runSplashScreen(true);
 </script>
 </body>
 </html>
