@@ -937,6 +937,9 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
       <button id="bt" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🔠 Big text</button>
       <button id="vb" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🎤 Voice test</button>
     </div>
+    <button id="chk-update" style="margin-top:10px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;gap:8px">
+      <span>🔄</span> Check & Install Update (యాప్ అప్‌డేట్ చేయండి)
+    </button>
   </div>
 </div>
 
@@ -1526,7 +1529,40 @@ $("btn-replay-splash").onclick = () => {
 
 runSplashScreen(true);
 
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+// Auto-update and registration
+if("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    reg.onupdatefound = () => {
+      const w = reg.installing;
+      if (w) {
+        w.onstatechange = () => {
+          if (w.state === "installed" && navigator.serviceWorker.controller) {
+            window.location.reload();
+          }
+        };
+      }
+    };
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    window.location.reload();
+  });
+}
+
+$("chk-update").onclick = async () => {
+  const btn = $("chk-update");
+  btn.textContent = "⏳ Updating to latest version...";
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (let r of regs) await r.update();
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch(e) {}
+  window.location.reload(true);
+};
 </script>
 </body>
 </html>
