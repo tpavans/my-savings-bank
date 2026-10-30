@@ -1,4 +1,4 @@
-const C = "savings-v10-live";
+const C = "savings-v12-update-popup";
 const A = [
   "./",
   "index.html",
@@ -23,8 +23,13 @@ self.addEventListener("activate", e => {
   );
 });
 
+self.addEventListener("message", e => {
+  if (e.data && e.data.action === "skipWaiting") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", e => {
-  // Network-First for HTML/navigation so code updates appear instantly!
   if (e.request.mode === "navigate" || e.request.destination === "document" || e.request.url.endsWith(".html") || e.request.url.endsWith("/")) {
     e.respondWith(
       fetch(e.request)
@@ -39,7 +44,6 @@ self.addEventListener("fetch", e => {
     );
     return;
   }
-  // Cache-first for images & static assets with fallback
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
   );

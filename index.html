@@ -447,6 +447,87 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   transform: scale(1.18);
 }
 
+/* ==========================================================
+   FLOATING NEW UPDATE NOTIFICATION TOAST
+========================================================== */
+.update-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-140px);
+  max-width: 92vw;
+  width: 440px;
+  background: rgba(9, 24, 66, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid #38bdf8;
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 10000;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 24px rgba(56, 189, 248, 0.35);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: #fff;
+}
+.update-toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+.update-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.update-toast-icon {
+  font-size: 26px;
+}
+.update-toast-text b {
+  display: block;
+  font-size: 14px;
+  color: #fff;
+}
+.update-toast-text span {
+  font-size: 11px;
+  color: #93c5fd;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.update-toast-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+.btn-toast-update {
+  margin: 0;
+  width: auto;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+.btn-toast-dismiss {
+  margin: 0;
+  width: auto;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 13px;
+  border: 0;
+  cursor: pointer;
+}
+
 /* Opening Splash Animation */
 #splash-screen {
   position: fixed;
@@ -648,6 +729,21 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 </head>
 <body>
 
+<!-- Floating New Update Notification Toast (Only pops up when new update exists!) -->
+<div id="update-toast" class="update-toast">
+  <div class="update-toast-content">
+    <div class="update-toast-icon">🎉</div>
+    <div class="update-toast-text">
+      <b>New Update Available!</b>
+      <span>కొత్త ఫీచర్లు వచ్చాయి. ఇప్పుడే అప్‌డేట్ చేయండి.</span>
+    </div>
+  </div>
+  <div class="update-toast-actions">
+    <button id="btn-update-now" class="btn-toast-update">Update Now ⚡</button>
+    <button id="btn-update-later" class="btn-toast-dismiss">✕</button>
+  </div>
+</div>
+
 <!-- Showstopping Opening Splash Animation Screen -->
 <div id="splash-screen">
   <div class="splash-ambient-glow"></div>
@@ -677,7 +773,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   </div>
 </div>
 
-<!-- Header (Always Visible on Top) -->
+<!-- Header (Clean, uncluttered, always visible) -->
 <div class="hd">
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95">
     <span style="display:inline-flex;align-items:center;gap:8px;font-weight:700">
@@ -686,7 +782,6 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     </span>
     <span style="display:flex;align-items:center;gap:4px">
       <span id="clk"></span>
-      <button id="btn-header-update" title="Check for Updates" style="width:auto;margin:0;padding:3px 8px;background:rgba(16,185,129,0.3);border:1px solid rgba(52,211,153,0.5);border-radius:8px;font-size:12px;color:#a7f3d0;font-weight:600">🔄 Update</button>
       <button id="btn-replay-splash" title="Replay Opening Animation" style="width:auto;margin:0;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:8px;font-size:12px;border:1px solid rgba(255,255,255,0.25)">✨ Splash</button>
       <button id="eye" title="Hide/Show Balance" style="width:auto;margin:0;padding:3px 8px;background:rgba(255,255,255,.2);border-radius:8px;font-size:12px;border:1px solid rgba(255,255,255,0.25)">👁️</button>
     </span>
@@ -883,23 +978,9 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 </div>
 
 <!-- ==========================================================
-     VIEW 5: SETTINGS (App Update Card on TOP, Goal Color Bar, Rules, Theme, PIN, Profile)
+     VIEW 5: SETTINGS (Goal Color Bar, Rules, Theme, PIN, Profile, Sleek Version Status)
 ========================================================== -->
 <div id="view-settings" class="app-view">
-  <!-- Prominent App Update Card on TOP of Settings -->
-  <div class="card" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); border: 1px solid #34d399; box-shadow: 0 8px 24px rgba(5,150,105,0.35);">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <b style="font-size:16px; color:#fff;">🔄 App Updates (తాజా అప్‌డేట్‌లు)</b>
-        <div style="font-size:12px; color:#a7f3d0; margin-top:3px;">Version 2.0 · Live from GitHub</div>
-      </div>
-      <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; color:#fff;">NEW</span>
-    </div>
-    <button id="chk-update" style="margin-top:12px; background:#fff; color:#065f46; font-weight:700; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; gap:8px;">
-      <span>⚡</span> Update App Now (కొత్త వెర్షన్‌కి అప్‌డేట్ చేయండి)
-    </button>
-  </div>
-
   <!-- Goal Colors Palette Bar with More Vibrant Colors -->
   <div class="card">
     <b>🎨 Goal Colors (రంగుల ఎంపిక)</b>
@@ -942,6 +1023,18 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     <b>🌓 Appearance & Accent</b>
     <div class="chips" style="justify-content:flex-start;margin-top:8px"><button id="thm" class="tab">🌗 Auto</button></div>
     <div class="chips" id="acc" style="justify-content:flex-start;margin-top:0"><button data-a="def">🔵 Deep Blue</button><button data-a="sun">🌅 Sunset ₹100🔒</button><button data-a="forest">🌲 Forest ₹500🔒</button></div>
+  </div>
+
+  <!-- Sleek Version Status (Update button only shows when new update exists, hidden once updated!) -->
+  <div class="card" id="version-card" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px">
+    <div>
+      <b style="font-size:14px">App Version</b>
+      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.2.0 · Up to date ✅</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="btn-settings-update" style="display:none;width:auto;margin:0;padding:7px 15px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:12px;font-weight:700;border:0;border-radius:10px;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer">Update Now ⚡</button>
+      <button id="btn-check-ver" style="width:auto;margin:0;padding:6px 12px;background:var(--cell);color:var(--tx);font-size:12px;border:1px solid var(--bd);border-radius:10px;cursor:pointer">Check</button>
+    </div>
   </div>
 
   <div class="card">
@@ -1103,7 +1196,6 @@ function sayMaheshStyle(text) {
                     null;
     if (inVoice) u.voice = inVoice;
     
-    // Mahesh Babu dialogue modulation: Confident, crisp baritone punch
     u.pitch = 0.92;
     u.rate = 1.04;
     u.volume = 1.0;
@@ -1119,7 +1211,7 @@ function say(t) {
 }
 
 // ==========================================================
-// DIRECT AUTOMATIC VOICE ENTRY (Adds directly without touching keypad!)
+// DIRECT AUTOMATIC VOICE ENTRY (Adds directly without keypad!)
 // ==========================================================
 function addVoiceEntryDirect(amt, spokenText) {
   if (!(amt > 0)) return;
@@ -1129,7 +1221,6 @@ function addVoiceEntryDirect(amt, spokenText) {
   const tmv = nowT();
   const note = spokenText ? ("Voice: " + spokenText) : "Voice save";
   
-  // Add directly to entries immediately
   g.entries.push({
     id: Date.now(),
     date: TD,
@@ -1147,7 +1238,6 @@ function addVoiceEntryDirect(amt, spokenText) {
   if ($("note")) $("note").value = "";
   render();
   
-  // Show celebration screen
   const done = before < g.target && tot(g) >= g.target;
   count($("okamt"), amt);
   $("oktx").textContent = "Txn ID: " + t + " · " + TD + " · " + h12(tmv);
@@ -1160,7 +1250,6 @@ function addVoiceEntryDirect(amt, spokenText) {
   if (done || ms) rain(["🎉", "🎊", "⭐", "🪙", "💰"], 60);
   else rain(["💸", "🪙", "💰", "💵"], 32);
   
-  // Mahesh Babu Voice Commentary
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${amt} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
@@ -1198,7 +1287,6 @@ function startVoiceEntry() {
     if (m) {
       const amount = parseFloat(m[0]);
       if (amount > 0) {
-        // AUTOMATIC INSTANT SAVE DIRECTLY (Keypad loki vellakunda!)
         addVoiceEntryDirect(amount, transcript);
       }
     } else {
@@ -1266,7 +1354,6 @@ $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(
   if(ms)$("okmsg").textContent="🏆 Milestone ₹"+ms+" reached! "+g.name;
   if(done||ms)rain(["🎉","🎊","⭐","🪙","💰"],60);else rain(["💸","🪙","💰","💵"],32);
   
-  // Dynamic Mahesh Babu style dialogue with real logged-in user name
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${a} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
@@ -1583,17 +1670,78 @@ $("btn-replay-splash").onclick = () => {
 };
 
 // ==========================================================
-// APP UPDATE ENGINE (Clear cache & auto-reload)
+// CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const triggerAppUpdate = async () => {
-  const btn = $("chk-update");
-  const hbtn = $("btn-header-update");
-  if (btn) btn.textContent = "⏳ Updating to latest version...";
-  if (hbtn) hbtn.textContent = "⏳ Updating...";
+const CURRENT_APP_VERSION = "2.2.0";
+
+function showUpdateToast() {
+  const toast = $("update-toast");
+  if (toast) toast.classList.add("show");
+  const bSet = $("btn-settings-update");
+  if (bSet) bSet.style.display = "inline-block";
+  const st = $("ver-status");
+  if (st) st.textContent = "New update available 🎉";
+}
+
+function hideUpdateToast() {
+  const toast = $("update-toast");
+  if (toast) toast.classList.remove("show");
+}
+
+let newWorkerWaiting = false;
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    // 1. If an update is already waiting, show update popup
+    if (reg.waiting) {
+      newWorkerWaiting = true;
+      showUpdateToast();
+    }
+    // 2. When a new update is found in the background
+    reg.onupdatefound = () => {
+      const w = reg.installing;
+      if (w) {
+        w.onstatechange = () => {
+          if (w.state === "installed" && navigator.serviceWorker.controller) {
+            newWorkerWaiting = true;
+            showUpdateToast();
+          }
+        };
+      }
+    };
+  }).catch(()=>{});
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    window.location.reload();
+  });
+}
+
+// Check stored version against current version
+const storedVer = localStorage.getItem("rsb_app_ver");
+if (!storedVer) {
+  localStorage.setItem("rsb_app_ver", CURRENT_APP_VERSION);
+} else if (storedVer !== CURRENT_APP_VERSION) {
+  showUpdateToast();
+}
+
+async function triggerAppUpdate() {
+  const btn = $("btn-update-now");
+  if (btn) btn.textContent = "⏳ Updating...";
+  const bSet = $("btn-settings-update");
+  if (bSet) bSet.textContent = "⏳ Updating...";
+  localStorage.setItem("rsb_app_ver", CURRENT_APP_VERSION);
+  hideUpdateToast();
+  if (bSet) bSet.style.display = "none";
+  const st = $("ver-status");
+  if (st) st.textContent = "v" + CURRENT_APP_VERSION + " · Up to date ✅";
+  
   try {
     if ("serviceWorker" in navigator) {
       const regs = await navigator.serviceWorker.getRegistrations();
-      for (let r of regs) await r.update();
+      for (let r of regs) {
+        if (r.waiting) r.waiting.postMessage({ action: "skipWaiting" });
+        await r.update();
+      }
     }
     if (window.caches) {
       const keys = await caches.keys();
@@ -1601,29 +1749,35 @@ const triggerAppUpdate = async () => {
     }
   } catch(e) {}
   window.location.reload(true);
-};
-
-if ($("chk-update")) $("chk-update").onclick = triggerAppUpdate;
-if ($("btn-header-update")) $("btn-header-update").onclick = triggerAppUpdate;
-
-// Auto-reload when new service worker takes over
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").then(reg => {
-    reg.onupdatefound = () => {
-      const w = reg.installing;
-      if (w) {
-        w.onstatechange = () => {
-          if (w.state === "installed" && navigator.serviceWorker.controller) {
-            window.location.reload();
-          }
-        };
-      }
-    };
-  }).catch(()=>{});
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    window.location.reload();
-  });
 }
+
+$("btn-update-now").onclick = triggerAppUpdate;
+if ($("btn-settings-update")) $("btn-settings-update").onclick = triggerAppUpdate;
+$("btn-update-later").onclick = hideUpdateToast;
+
+$("btn-check-ver").onclick = async () => {
+  const st = $("ver-status");
+  st.textContent = "Checking...";
+  let found = false;
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (let r of regs) {
+        await r.update();
+        if (r.waiting || r.installing) found = true;
+      }
+    }
+  } catch(e) {}
+  if (found || newWorkerWaiting) {
+    st.textContent = "New update available 🎉";
+    showUpdateToast();
+  } else {
+    st.textContent = "v" + CURRENT_APP_VERSION + " · Already up to date ✅";
+    const bSet = $("btn-settings-update");
+    if (bSet) bSet.style.display = "none";
+    setTimeout(() => { st.textContent = "v" + CURRENT_APP_VERSION + " · Up to date ✅"; }, 2500);
+  }
+};
 
 runSplashScreen(true);
 </script>
