@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 // Single instance lock
 const gotTheLock = app.requestSingleInstanceLock();
@@ -27,10 +28,13 @@ function createWindow() {
     }
   });
 
-  // Load the savings app index.html
-  mainWindow.loadFile(path.join(__dirname, 'savings-app-1', 'index.html'));
+  const rootIndex = path.join(__dirname, 'index.html');
+  if (fs.existsSync(rootIndex)) {
+    mainWindow.loadFile(rootIndex);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'savings-app-1', 'index.html'));
+  }
 
-  // Open external links in default web browser instead of electron window
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       shell.openExternal(url);
