@@ -79,6 +79,7 @@ body {
   color: var(--tx);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   padding: 16px;
+  padding-bottom: 96px; /* Space for bottom nav bar */
   max-width: 560px;
   margin-inline: auto;
   transition: background 0.3s, color 0.3s;
@@ -190,7 +191,7 @@ button:active { transform: scale(0.98); }
   align-items: center;
   justify-content: center;
   text-align: center;
-  z-index: 50;
+  z-index: 900;
   padding: 24px;
   overflow: hidden;
 }
@@ -241,7 +242,7 @@ button:active { transform: scale(0.98); }
   align-items: center;
   justify-content: center;
   text-align: center;
-  z-index: 50;
+  z-index: 900;
   padding: 24px;
   overflow: hidden;
 }
@@ -287,7 +288,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   inset: 0;
   background: radial-gradient(ellipse at 50% 25%, #102c78 0%, #07153b 50%, #030818 100%);
   color: #fff;
-  z-index: 200;
+  z-index: 1000;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -312,7 +313,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   inset: 0;
   background: radial-gradient(ellipse at 50% 25%, #102c78 0%, #07153b 50%, #030818 100%);
   color: #fff;
-  z-index: 100;
+  z-index: 950;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -330,8 +331,122 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
 /* ==========================================================
-   OPENING SPLASH ANIMATION (Deep Blue Base & Custom Icon)
+   APP VIEWS & BOTTOM NAVIGATION BAR
 ========================================================== */
+.app-view {
+  display: none;
+  animation: viewFade 0.22s ease-in-out;
+}
+.app-view.on {
+  display: block;
+}
+@keyframes viewFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 560px;
+  margin-inline: auto;
+  background: rgba(7, 21, 59, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+  z-index: 500;
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.45);
+}
+.nav-btn {
+  background: transparent;
+  border: 0;
+  color: var(--mu);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 0;
+  width: auto;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.nav-btn .icon {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+.nav-btn.on {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.2);
+}
+.nav-btn.on .icon {
+  transform: translateY(-2px) scale(1.15);
+}
+
+/* Voice Entry Button under Pay to Savings */
+.voice-entry-btn {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+  border: 1px solid rgba(96, 165, 250, 0.3) !important;
+}
+.voice-entry-btn:active {
+  transform: scale(0.98);
+}
+
+/* Goal Color Palette Bar */
+.color-bar-container {
+  margin: 10px 0;
+}
+.color-palette-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 4px;
+  scrollbar-width: none;
+}
+.color-palette-bar::-webkit-scrollbar { display: none; }
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  cursor: pointer;
+  border: 3px solid transparent;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 800;
+}
+.color-swatch:hover {
+  transform: scale(1.12);
+}
+.color-swatch.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 14px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.4);
+  transform: scale(1.18);
+}
+
+/* Opening Splash Animation */
 #splash-screen {
   position: fixed;
   inset: 0;
@@ -561,6 +676,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   </div>
 </div>
 
+<!-- Header (Always Visible) -->
 <div class="hd">
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95">
     <span style="display:inline-flex;align-items:center;gap:8px;font-weight:700">
@@ -577,49 +693,278 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   <div class="hb" id="all">₹0</div>
   <div style="font-size:12px;opacity:.85;margin-top:6px" id="who"></div>
 </div>
-<div id="tabs"></div>
 
-<div class="card" id="nf">
-  <b>Kotha savings goal</b>
-  <div class="chips" id="pre"></div>
-  <div class="row">
-    <div style="flex:3"><label>Name</label><input id="nn" placeholder="e.g. Goa Trip"></div>
-    <div style="flex:1;min-width:70px"><label>Emoji</label><input id="ne" value="🎯"></div>
+<!-- ==========================================================
+     VIEW 1: HOME (Goals, Balance, Pay to Savings & Voice Entry)
+========================================================== -->
+<div id="view-home" class="app-view on">
+  <div id="tabs"></div>
+
+  <div class="card" id="nf">
+    <b>Kotha savings goal</b>
+    <div class="chips" id="pre"></div>
+    <div class="row">
+      <div style="flex:3"><label>Name</label><input id="nn" placeholder="e.g. Goa Trip"></div>
+      <div style="flex:1;min-width:70px"><label>Emoji</label><input id="ne" value="🎯"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div style="flex:1"><label>Target ₹</label><input id="nt" type="number" inputmode="decimal"></div>
+      <div style="flex:1"><label>Days (0 = no deadline)</label><input id="nd" type="number" inputmode="numeric" value="0"></div>
+    </div>
+    <button id="mk">Create goal</button>
   </div>
-  <div class="row" style="margin-top:8px">
-    <div style="flex:1"><label>Target ₹</label><input id="nt" type="number" inputmode="decimal"></div>
-    <div style="flex:1"><label>Days (0 = no deadline)</label><input id="nd" type="number" inputmode="numeric" value="0"></div>
+
+  <div class="card">
+    <div style="font-size:13px;color:var(--mu)" id="gname"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><div class="big" id="total">₹0</div><div id="pile"></div></div>
+    <div class="bar"><i id="pb"></i></div>
+    <div class="hint" id="pct"></div><a id="rch" href="https://www.jio.com/selfcare/recharge/mobility/" target="_blank" rel="noopener" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:var(--ok);color:#fff;text-align:center;font-weight:600;text-decoration:none">🔄 Recharge now (Jio)</a>
+    <div class="row" style="margin-top:14px">
+      <div class="stat"><b id="rem">₹0</b><span>Inka kavali</span></div>
+      <div class="stat"><b id="day">-</b><span>Plan day</span></div>
+      <div class="stat"><b id="today">₹0</b><span>Ee roju saved</span></div>
+    </div>
+    <div class="hint" id="need"></div>
   </div>
-  <button id="mk">Create goal</button>
+
+  <div class="card">
+    <div class="to">Paying to <b id="payto"></b></div>
+    <div class="amtbox"><span>₹</span><b id="disp">0</b></div>
+    <input id="amt" type="hidden">
+    <div class="chips" id="q"><button data-q="5">+5</button><button data-q="10">+10</button><button data-q="20">+20</button><button data-q="50">+50</button><button data-q="100">+100</button></div>
+    <div class="keys"><button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button data-k=".">.</button><button data-k="0">0</button><button data-k="del">⌫</button></div>
+    <div class="row">
+      <div style="flex:2"><label>Note</label><input id="note" placeholder="e.g. chai money save"></div>
+      <div style="flex:1.3"><label>Date</label><input id="dt" type="date"></div>
+      <div style="flex:1.3"><label>Time</label><input id="tm" type="time"></div>
+    </div>
+    <div class="row" style="margin-top:8px"><select id="src" style="flex:1"><option>💵 Cash</option><option>📲 UPI</option><option>🏦 Bank</option></select><select id="md" style="flex:1"><option>😀</option><option>😐</option><option>😞</option></select></div>
+    
+    <!-- Primary Pay to Savings Button -->
+    <button id="add">Pay to Savings ✅</button>
+    
+    <!-- Voice Entry Button directly under Pay to Savings -->
+    <button id="vb_quick" type="button" class="voice-entry-btn">
+      <span style="font-size:18px">🎤</span>
+      <span>Voice Entry (నోటితో చెప్పి Add చేయండి)</span>
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="row"><div class="stat"><b id="stk">0</b><span>Streak</span></div><div class="stat"><b id="lvl">-</b><span>Level</span></div><div class="stat"><b id="bst">₹0</b><span>Best day</span></div></div>
+    <div class="bar"><i id="dpb"></i></div><div class="hint" id="dtx"></div><div class="hint" id="qt" style="font-style:italic"></div>
+    <div class="row"><button id="qs" style="flex:1">⚡ Quick save</button><button id="ns" style="flex:1;background:var(--cell);color:var(--tx)">🎲 No-spend day</button></div>
+  </div>
 </div>
 
-<div class="card">
-  <div style="font-size:13px;color:var(--mu)" id="gname"></div>
-  <div style="display:flex;justify-content:space-between;align-items:center"><div class="big" id="total">₹0</div><div id="pile"></div></div>
-  <div class="bar"><i id="pb"></i></div>
-  <div class="hint" id="pct"></div><a id="rch" href="https://www.jio.com/selfcare/recharge/mobility/" target="_blank" rel="noopener" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:var(--ok);color:#fff;text-align:center;font-weight:600;text-decoration:none">🔄 Recharge now (Jio)</a>
-  <div class="row" style="margin-top:14px">
-    <div class="stat"><b id="rem">₹0</b><span>Inka kavali</span></div>
-    <div class="stat"><b id="day">-</b><span>Plan day</span></div>
-    <div class="stat"><b id="today">₹0</b><span>Ee roju saved</span></div>
+<!-- ==========================================================
+     VIEW 2: HISTORY (Charts, Calendar, Passbook, Day List)
+========================================================== -->
+<div id="view-history" class="app-view">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b>📊 Savings chart</b>
+      <span><button id="c7" class="tab" style="padding:4px 12px">7d</button> <button id="c30" class="tab" style="padding:4px 12px">30d</button></span>
+    </div>
+    <div id="chart" style="display:flex;gap:2px;align-items:flex-end;height:140px;margin-top:12px"></div>
   </div>
-  <div class="hint" id="need"></div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <button id="cp" class="tab">‹</button><b id="cmt"></b><button id="cn" class="tab">›</button>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(7,1fr);margin-top:8px;text-align:center;font-size:10px;color:var(--mu)"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div class="grid" id="cal" style="grid-template-columns:repeat(7,1fr);margin-top:4px"></div>
+    <div class="hint">🟩 saved · 🟦 no-spend · 🟥 missed</div>
+  </div>
+
+  <div class="card">
+    <b>🧾 Passbook</b>
+    <div class="row" style="margin:8px 0">
+      <input id="pq" placeholder="Search date / note / amount" style="flex:2">
+      <button id="ud" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">↩️ Undo</button>
+    </div>
+    <div style="overflow-x:auto"><table class="pb" id="pbt"></table></div>
+  </div>
+
+  <div class="card" id="gc"><b>Days tracker</b><div class="grid" id="grid"></div></div>
+  <div class="card"><b>Day-wise History</b><div id="list"></div></div>
+
+  <div class="card">
+    <b>📈 Report &amp; Backup</b>
+    <div class="row"><button id="rpb" style="flex:1">This month report</button><button id="bkb" style="flex:1;background:var(--cell);color:var(--tx)">Backup</button></div>
+    <div class="hint" id="rp" style="white-space:pre-wrap;color:var(--tx)"></div>
+    <textarea id="bk" rows="3" placeholder="Backup data ikkada vasthundi. Restore ki paste chesi Restore nokku" style="width:100%;margin-top:8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:8px"></textarea>
+    <button id="rsb" style="background:var(--cell);color:var(--tx)">Restore</button>
+  </div>
 </div>
 
-<div class="card">
-  <div class="to">Paying to <b id="payto"></b></div>
-  <div class="amtbox"><span>₹</span><b id="disp">0</b></div>
-  <input id="amt" type="hidden">
-  <div class="chips" id="q"><button data-q="5">+5</button><button data-q="10">+10</button><button data-q="20">+20</button><button data-q="50">+50</button><button data-q="100">+100</button></div>
-  <div class="keys"><button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button data-k=".">.</button><button data-k="0">0</button><button data-k="del">⌫</button></div>
-  <div class="row">
-    <div style="flex:2"><label>Note</label><input id="note" placeholder="e.g. chai money save"></div>
-    <div style="flex:1.3"><label>Date</label><input id="dt" type="date"></div>
-    <div style="flex:1.3"><label>Time</label><input id="tm" type="time"></div>
+<!-- ==========================================================
+     VIEW 3: TOOLS (Round-up, Withdraw, Calculators, Split, Notes)
+========================================================== -->
+<div id="view-tools" class="app-view">
+  <div class="card">
+    <b>🧰 Savings Tools</b>
+    <label style="margin-top:10px">🪙 Round-up: kharchu chesina amount ₹</label>
+    <div class="row"><input id="rs" type="number" inputmode="decimal" placeholder="e.g. 47" style="flex:1"><button id="rb" style="flex:1;margin:0;width:auto">Round-up save</button></div>
+    <label style="margin-top:12px">💸 Withdraw / Spend ₹ (goal nundi teesukunte)</label>
+    <div class="row"><input id="wa" type="number" inputmode="decimal" placeholder="Amount" style="flex:1"><input id="wn" placeholder="Reason" style="flex:2"></div><button id="wb" style="background:#f04438">Withdraw</button>
+    <label style="margin-top:12px">🧮 What-if: roju ₹ / entha rojulu</label>
+    <div class="row"><input id="wp" type="number" inputmode="decimal" placeholder="₹ per day" style="flex:1"><input id="wdn" type="number" inputmode="numeric" value="56" style="flex:1"></div><div class="hint" id="wr"></div>
   </div>
-  <div class="row" style="margin-top:8px"><select id="src" style="flex:1"><option>💵 Cash</option><option>📲 UPI</option><option>🏦 Bank</option></select><select id="md" style="flex:1"><option>😀</option><option>😐</option><option>😞</option></select></div>
-  <button id="add">Pay to Savings ✅</button>
+
+  <div class="card">
+    <b>💱 Savings split</b>
+    <div class="row" style="margin-top:8px"><input id="spa" type="number" inputmode="decimal" placeholder="Total ₹ amount"></div>
+    <div id="spl"></div>
+    <button id="spb">Split & save</button>
+    <div class="hint" id="spm"></div>
+  </div>
+
+  <div class="card">
+    <b>📒 Money notes</b>
+    <div class="row" style="margin-top:8px"><select id="nt" style="flex:1.2"><option value="lend">🤝 Lend (ichanu)</option><option value="borrow">🙏 Borrow (teesukunna)</option><option value="earn">💼 Earning</option><option value="cpn">🎁 Coupon / offer</option></select><input id="ntx" placeholder="Name / source" style="flex:1.5"></div>
+    <div class="row" style="margin-top:8px"><input id="nam" type="number" inputmode="decimal" placeholder="₹" style="flex:1"><input id="ndt" type="date" style="flex:1.3"></div>
+    <button id="nad">Add</button>
+    <div id="nl"></div>
+  </div>
+
+  <div class="card">
+    <b>🧮 Financial Calculators</b>
+    <label style="margin-top:10px">💰 Budget 50/30/20: monthly income ₹</label><input id="bi" type="number" inputmode="decimal"><div class="hint" id="br"></div>
+    <label style="margin-top:10px">📈 Interest (RD): ₹/month · rate % · months</label><div class="row"><input id="ia" type="number" placeholder="₹/month" style="flex:1"><input id="ir" type="number" value="6.5" style="flex:1"><input id="im" type="number" value="12" style="flex:1"></div><div class="hint" id="ires"></div>
+    <label style="margin-top:10px">🔄 Plan compare: price ₹ for 28 / 56 / 84 days</label><div class="row"><input id="p28" type="number" placeholder="28d ₹" style="flex:1"><input id="p56" type="number" placeholder="56d ₹" style="flex:1"><input id="p84" type="number" placeholder="84d ₹" style="flex:1"></div><div class="hint" id="pcr"></div>
+  </div>
 </div>
+
+<!-- ==========================================================
+     VIEW 4: AI & FUN (AI Coach, Games, Spin, Challenges, Insights)
+========================================================== -->
+<div id="view-fun" class="app-view">
+  <div class="card" id="ai">
+    <b>🤖 AI Money Coach</b>
+    <div class="hint">Roju entha save/earn cheyyalo, ela cheyyalo AI cheptundi.</div>
+    <label style="margin-top:10px">Nee situation (optional)</label>
+    <input id="aic" placeholder="e.g. student, evenings free, laptop undi">
+    <button id="aib">💡 Ideas generate chey</button>
+    <button id="aik" style="background:var(--cell);color:var(--tx)">🔍 Spending leak finder</button>
+    <button id="aiw" style="background:var(--cell);color:var(--tx)">📝 AI weekly review</button>
+    <button id="aip" style="background:var(--cell);color:var(--tx)">📶 AI plan advisor</button>
+    <div class="out" id="aio"></div>
+  </div>
+
+  <div class="card">
+    <b>🕹️ Coin catch game</b>
+    <div class="hint" id="gt">15 sec lo coins tap chey!</div>
+    <div id="ga"></div>
+    <button id="gs">▶ Start</button>
+  </div>
+
+  <div class="card">
+    <b>🎰 Daily spin & challenges</b>
+    <div class="row" style="margin-top:10px"><button id="sp" style="flex:1;margin:0">🎰 Spin</button><select id="ch" style="flex:2"><option value="">Challenge select chey</option><option value="ten">₹10 daily × 30 days</option><option value="inc">₹1 → ₹2 → ₹3 increasing</option><option value="w52">52-week challenge</option><option value="coin">Coin jar (₹1/₹2/₹5 matrame)</option></select></div>
+    <div class="hint" id="spr" style="color:var(--tx)"></div>
+    <button id="chb" style="display:none">Do today challenge</button>
+  </div>
+
+  <div class="card">
+    <b>🧠 Smart insights</b>
+    <div class="hint" id="sm" style="white-space:pre-wrap;color:var(--tx);line-height:1.7"></div>
+    <div class="row"><button id="fz" style="flex:1;background:var(--cell);color:var(--tx)">🧊 Streak freeze</button><button id="yr" style="flex:1;background:var(--cell);color:var(--tx)">📅 Year review</button></div>
+    <div class="hint" id="yrt" style="white-space:pre-wrap;color:var(--tx)"></div>
+  </div>
+
+  <div class="card">
+    <b>🏅 Achievements</b>
+    <div id="ach" class="chips" style="justify-content:flex-start;margin-bottom:0"></div>
+  </div>
+</div>
+
+<!-- ==========================================================
+     VIEW 5: SETTINGS (Goal Color Bar, Rules, Theme, PIN, Profile)
+========================================================== -->
+<div id="view-settings" class="app-view">
+  <!-- Goal Colors Palette Bar with More Vibrant Colors -->
+  <div class="card">
+    <b>🎨 Goal Colors (రంగుల ఎంపిక)</b>
+    <div class="hint">మీ ప్రస్తుత Goal కి నచ్చిన Color Palette ని ఎంచుకోండి:</div>
+    <div class="color-bar-container">
+      <div id="color-bar" class="color-palette-bar"></div>
+    </div>
+    <div class="row" style="margin-top:8px;align-items:center">
+      <div style="flex:1.2">
+        <label>Custom Color</label>
+        <input id="gcol" type="color" style="padding:2px;height:44px;border-radius:10px;cursor:pointer">
+      </div>
+      <div style="flex:1.2">
+        <label>Daily limit ₹</label>
+        <input id="lm" type="number" inputmode="decimal">
+      </div>
+      <div style="flex:1.2">
+        <label>Lock withdraw</label>
+        <input id="lk" type="date">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>🎯 Goal Settings</b>
+    <div class="row">
+      <div style="flex:1"><label>Start date</label><input id="st" type="date"></div>
+      <div style="flex:1"><label>Target ₹</label><input id="tg" type="number" inputmode="decimal"></div>
+      <div style="flex:1"><label>Days (0 = none)</label><input id="sd" type="number" inputmode="numeric"></div>
+    </div>
+    <div class="hint" style="margin-top:14px">
+      <span class="small" id="reset">Clear this goal entries</span>
+      <span class="small" id="del">Delete this goal</span>
+      <span class="small" id="pin">Set app PIN</span>
+      <span class="small" id="lo">Logout</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>🌓 Appearance & Accent</b>
+    <div class="chips" style="justify-content:flex-start;margin-top:8px"><button id="thm" class="tab">🌗 Auto</button></div>
+    <div class="chips" id="acc" style="justify-content:flex-start;margin-top:0"><button data-a="def">🔵 Deep Blue</button><button data-a="sun">🌅 Sunset ₹100🔒</button><button data-a="forest">🌲 Forest ₹500🔒</button></div>
+  </div>
+
+  <div class="card">
+    <b>⚙️ Quick Controls</b>
+    <div class="row" style="margin-top:8px">
+      <button id="snd" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🔊 Sound on</button>
+      <button id="bt" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🔠 Big text</button>
+      <button id="vb" style="flex:1;margin:0;background:var(--cell);color:var(--tx)">🎤 Voice test</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================
+     BOTTOM NAVIGATION BAR (Stops Lengthy Scrolling)
+========================================================== -->
+<nav id="bottom-nav">
+  <button class="nav-btn on" data-target="view-home">
+    <span class="icon">🏠</span>
+    <span>Home</span>
+  </button>
+  <button class="nav-btn" data-target="view-history">
+    <span class="icon">📊</span>
+    <span>History</span>
+  </button>
+  <button class="nav-btn" data-target="view-tools">
+    <span class="icon">🧰</span>
+    <span>Tools</span>
+  </button>
+  <button class="nav-btn" data-target="view-fun">
+    <span class="icon">🤖</span>
+    <span>AI & Fun</span>
+  </button>
+  <button class="nav-btn" data-target="view-settings">
+    <span class="icon">⚙️</span>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<!-- Overlays: Withdraw & Auth & Lock & Success -->
 <div id="wdo"><div class="wdi">💸</div><div style="font-size:20px;font-weight:600;margin-top:14px">Money Withdrawn</div><div style="font-size:44px;font-weight:700;margin:12px 0 4px" id="wdamt"></div><div id="wdbal"></div><button id="wdd">Done</button></div>
 
 <div id="auth"><div class="bx">
@@ -648,47 +993,6 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 
 <div id="ok"><div class="tick">✓</div><div class="ttl">Payment Successful</div><div class="a" id="okamt"></div><div id="okmsg"></div><div class="hint" id="oktx" style="color:#fff;opacity:.85"></div><button id="okd">Done</button><div class="pig">🐷</div></div>
 
-<div class="card" id="ai" style="display:none"><b>🤖 AI Money Coach</b>
-  <div class="hint">Roju entha save/earn cheyyalo, ela cheyyalo AI cheptundi.</div>
-  <label style="margin-top:10px">Nee situation (optional)</label>
-  <input id="aic" placeholder="e.g. student, evenings free, laptop undi">
-  <button id="aib">💡 Ideas generate chey</button>
-  <button id="aik" style="background:var(--cell);color:var(--tx)">🔍 Spending leak finder</button>
-  <button id="aiw" style="background:var(--cell);color:var(--tx)">📝 AI weekly review</button>
-  <button id="aip" style="background:var(--cell);color:var(--tx)">📶 AI plan advisor</button>
-  <div class="out" id="aio"></div></div>
-<div class="card"><div class="row"><div class="stat"><b id="stk">0</b><span>Streak</span></div><div class="stat"><b id="lvl">-</b><span>Level</span></div><div class="stat"><b id="bst">₹0</b><span>Best day</span></div></div>
-  <div class="bar"><i id="dpb"></i></div><div class="hint" id="dtx"></div><div class="hint" id="qt" style="font-style:italic"></div>
-  <div class="row"><button id="qs" style="flex:1">⚡ Quick save</button><button id="ns" style="flex:1;background:var(--cell);color:var(--tx)">🎲 No-spend day</button></div></div>
-<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>📊 Savings chart</b><span><button id="c7" class="tab" style="padding:4px 12px">7d</button> <button id="c30" class="tab" style="padding:4px 12px">30d</button></span></div><div id="chart" style="display:flex;gap:2px;align-items:flex-end;height:140px;margin-top:12px"></div></div>
-<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><button id="cp" class="tab">‹</button><b id="cmt"></b><button id="cn" class="tab">›</button></div>
-  <div class="grid" style="grid-template-columns:repeat(7,1fr);margin-top:8px;text-align:center;font-size:10px;color:var(--mu)"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
-  <div class="grid" id="cal" style="grid-template-columns:repeat(7,1fr);margin-top:4px"></div><div class="hint">🟩 saved · 🟦 no-spend · 🟥 missed</div></div>
-<div class="card"><b>🧰 Tools</b>
-  <label style="margin-top:10px">🪙 Round-up: kharchu chesina amount ₹</label>
-  <div class="row"><input id="rs" type="number" inputmode="decimal" placeholder="e.g. 47" style="flex:1"><button id="rb" style="flex:1;margin:0;width:auto">Round-up save</button></div>
-  <label style="margin-top:12px">💸 Withdraw / Spend ₹ (goal nundi teesukunte)</label>
-  <div class="row"><input id="wa" type="number" inputmode="decimal" placeholder="Amount" style="flex:1"><input id="wn" placeholder="Reason" style="flex:2"></div><button id="wb" style="background:#f04438">Withdraw</button>
-  <label style="margin-top:12px">🧮 What-if: roju ₹ / entha rojulu</label>
-  <div class="row"><input id="wp" type="number" inputmode="decimal" placeholder="₹ per day" style="flex:1"><input id="wdn" type="number" inputmode="numeric" value="56" style="flex:1"></div><div class="hint" id="wr"></div>
-  <div class="chips" style="justify-content:flex-start;margin-top:12px"><button id="thm" class="tab">🌗 Auto</button></div>
-  <div class="chips" id="acc" style="justify-content:flex-start;margin-top:0"><button data-a="def">🔵 Deep Blue</button><button data-a="sun">🌅 Sunset ₹100🔒</button><button data-a="forest">🌲 Forest ₹500🔒</button></div></div>
-<div class="card"><b>📈 Report &amp; Backup</b><div class="row"><button id="rpb" style="flex:1">This month report</button><button id="bkb" style="flex:1;background:var(--cell);color:var(--tx)">Backup</button></div><div class="hint" id="rp" style="white-space:pre-wrap;color:var(--tx)"></div>
-  <textarea id="bk" rows="3" placeholder="Backup data ikkada vasthundi. Restore ki paste chesi Restore nokku" style="width:100%;margin-top:8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:8px"></textarea><button id="rsb" style="background:var(--cell);color:var(--tx)">Restore</button></div>
-<div id="more"></div>
-<div class="card" id="gc"><b>Days tracker</b><div class="grid" id="grid"></div></div>
-<div class="card"><b>Day-wise History</b><div id="list"></div></div>
-
-<div class="card">
-  <div class="row">
-    <div style="flex:1"><label>Start date</label><input id="st" type="date"></div>
-    <div style="flex:1"><label>Target ₹</label><input id="tg" type="number" inputmode="decimal"></div>
-    <div style="flex:1"><label>Days (0 = none)</label><input id="sd" type="number" inputmode="numeric"></div>
-  </div>
-  <div class="hint"><span class="small" id="reset">Clear this goal entries</span><span class="small" id="del">Delete this goal</span><span class="small" id="pin">Set app PIN</span><span class="small" id="lo">Logout</span></div>
-  <div class="hint">📲 Home screen ki: browser menu → “Add to Home screen”</div>
-</div>
-
 <script>
 const $=id=>document.getElementById(id);
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
@@ -710,6 +1014,153 @@ const tot=g=>g.entries.reduce((a,e)=>a+e.amt,0);
 const PRE=[["📱","Mobile Recharge",630,56],["✈️","Trip",5000,0],["🛡️","Emergency Fund",10000,0],["🎁","Gift",1000,30],["💻","Gadget",20000,0],["🏍️","Bike",50000,0]];
 $("pre").innerHTML=PRE.map((p,i)=>`<button data-p="${i}">${p[0]} ${p[1]}</button>`).join("");
 
+// ==========================================================
+// GOAL COLOR PALETTE BAR (Vibrant Colors Selection)
+// ==========================================================
+const VIBRANT_GOAL_COLORS = [
+  { c: "#2563eb", name: "Royal Blue" },
+  { c: "#10b981", name: "Emerald Green" },
+  { c: "#8b5cf6", name: "Electric Purple" },
+  { c: "#f97316", name: "Sunset Orange" },
+  { c: "#ef4444", name: "Ruby Crimson" },
+  { c: "#eab308", name: "Golden Amber" },
+  { c: "#06b6d4", name: "Neon Cyan" },
+  { c: "#ec4899", name: "Hot Pink" },
+  { c: "#14b8a6", name: "Teal Mint" },
+  { c: "#6366f1", name: "Indigo Night" },
+  { c: "#d97706", name: "Metallic Bronze" },
+  { c: "#64748b", name: "Slate Grey" }
+];
+
+function renderColorBar() {
+  const cBar = $("color-bar");
+  if (!cBar) return;
+  const curCol = (G().color || "#2563eb").toLowerCase();
+  cBar.innerHTML = VIBRANT_GOAL_COLORS.map(item => {
+    const isAct = item.c.toLowerCase() === curCol;
+    return `<div class="color-swatch ${isAct ? 'active' : ''}" data-col="${item.c}" style="background:${item.c}" title="${item.name}">${isAct ? '✓' : ''}</div>`;
+  }).join("");
+}
+
+$("color-bar").onclick = e => {
+  const swatch = e.target.closest("[data-col]");
+  if (!swatch) return;
+  const col = swatch.dataset.col;
+  const g = G();
+  g.color = col;
+  $("gcol").value = col;
+  save();
+  renderColorBar();
+  render();
+};
+
+// ==========================================================
+// BOTTOM NAVIGATION BAR (Menu Bar switching)
+// ==========================================================
+document.querySelectorAll(".nav-btn").forEach(btn => {
+  btn.onclick = () => {
+    const targetId = btn.dataset.target;
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("on"));
+    document.querySelectorAll(".app-view").forEach(v => v.classList.remove("on"));
+    btn.classList.add("on");
+    const vEl = $(targetId);
+    if (vEl) {
+      vEl.classList.add("on");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+});
+
+// ==========================================================
+// MAHESH BABU STYLE VOICE COMMENTARY ENGINE
+// ==========================================================
+function sayMaheshStyle(text) {
+  if (!window._snd || !window.speechSynthesis) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    // Prioritize Indian English / Telugu voices
+    const inVoice = voices.find(v => v.lang === "te-IN") ||
+                    voices.find(v => v.lang.includes("IN") && (v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("ravi") || v.name.toLowerCase().includes("mohan") || v.name.toLowerCase().includes("prabhat"))) ||
+                    voices.find(v => v.lang.includes("IN")) ||
+                    voices.find(v => v.name.toLowerCase().includes("male")) ||
+                    null;
+    if (inVoice) u.voice = inVoice;
+    
+    // Mahesh Babu dialogue modulation: Confident, crisp baritone punch
+    u.pitch = 0.92;
+    u.rate = 1.04;
+    u.volume = 1.0;
+    
+    window.speechSynthesis.speak(u);
+  } catch (e) {
+    console.log("Speech error:", e);
+  }
+}
+
+// Fallback say function
+function say(t) {
+  sayMaheshStyle(t);
+}
+
+// ==========================================================
+// VOICE ENTRY (Under Pay to Savings)
+// ==========================================================
+function startVoiceEntry() {
+  const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!R) return alert("Ee browser lo voice recognition support ledu. Google Chrome vaadandi.");
+  
+  const r = new R();
+  r.lang = "en-IN";
+  
+  const vb = $("vb_quick");
+  const oldText = vb ? vb.innerHTML : "";
+  if (vb) {
+    vb.innerHTML = "🔴 వింటున్నాను... Amount చెప్పండి (e.g. 50)";
+    vb.style.background = "#dc2626";
+  }
+  
+  r.onresult = e => {
+    if (vb) { vb.innerHTML = oldText; vb.style.background = ""; }
+    const transcript = (e.results[0][0].transcript || "").trim();
+    console.log("Spoken:", transcript);
+    
+    let m = transcript.match(/\d+(\.\d+)?/);
+    if (!m) {
+      const words = { "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "hundred": 100, "five hundred": 500, "thousand": 1000, "padi": 10, "iravai": 20, "muppai": 30, "yaabhai": 50, "vandha": 100, "veyyi": 1000 };
+      const low = transcript.toLowerCase();
+      for (const [k, v] of Object.entries(words)) {
+        if (low.includes(k)) { m = [String(v)]; break; }
+      }
+    }
+    
+    if (m) {
+      cur = m[0];
+      upd();
+      $("note").value = "Voice: " + transcript;
+      beep();
+      $("add").focus();
+    } else {
+      alert("Amount అర్థం కాలేదు. '50 rupees' లేదా '100' అని స్పష్టంగా చెప్పండి.");
+    }
+  };
+  
+  r.onerror = () => {
+    if (vb) { vb.innerHTML = oldText; vb.style.background = ""; }
+    alert("Voice microphone error వచ్చింది. Permission check చేసి మళ్లీ ప్రయత్నించండి.");
+  };
+  
+  r.onend = () => {
+    if (vb) { vb.innerHTML = oldText; vb.style.background = ""; }
+  };
+  
+  r.start();
+}
+
+$("vb_quick").onclick = startVoiceEntry;
+$("vb").onclick = startVoiceEntry;
+
 function render(){
   const g=G();S.cur=g.id;
   $("tabs").innerHTML=S.goals.map(x=>`<button class="tab ${x.id===g.id?"on":""}" data-g="${x.id}">${x.emoji} ${x.name}</button>`).join("")+'<button class="tab" id="newg">＋ New</button>';
@@ -730,9 +1181,10 @@ function render(){
     $("grid").innerHTML=h;$("gc").style.display="";
   }else{$("day").textContent="No deadline";$("need").textContent=rem>0?"Deadline ledu — free ga save chey, "+f(rem)+" inka kavali":"";$("gc").style.display="none"}
   const L=[...g.entries].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
-  $("list").innerHTML=dayList(g);const _u=L.length?L.map(e=>`<div class="e"><span>${e.note||"Saved"}<br><small style="color:var(--mu)">${e.date}${e.time?" · "+h12(e.time):""} · ${e.txn||"-"}</small></span><b style="color:var(--ok)">+₹${e.amt}</b><button data-i="${e.id}">✕</button></div>`).join(""):'<div class="hint">Inka em save cheyaledu.</div>';
+  $("list").innerHTML=dayList(g);
   $("st").value=g.start;$("tg").value=g.target;$("sd").value=D;extras(g,t,rem,D);
   $("del").style.display=S.goals.length>1?"":"none";
+  renderColorBar();
 }
 var cur="";
 function upd(){$("disp").textContent=cur||"0";$("amt").value=cur}
@@ -742,6 +1194,7 @@ function beep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(
 
 document.querySelector(".keys").onclick=e=>{const k=e.target.dataset.k;if(k==null)return;if(k==="del")cur=cur.slice(0,-1);else if(k==="."){if(!cur.includes("."))cur=(cur||"0")+"."}else if(cur.length<7)cur=(cur==="0"?"":cur)+k;upd()};
 $("q").onclick=e=>{const q=e.target.dataset.q;if(q){cur=String((parseFloat(cur)||0)+parseFloat(q));upd()}};
+
 $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(!(a>0))return;
   const g=G(),before=tot(g),t="SB"+Date.now().toString().slice(-8)+Math.floor(Math.random()*90+10);
   const tmv=$("tm").value||nowT();g.entries.push({id:Date.now(),date:d,time:tmv,amt:a,note:$("note").value.trim(),txn:t,src:$("src").value,md:$("md").value});$("tm").value=nowT();save();cur="";upd();$("note").value="";render();
@@ -752,7 +1205,14 @@ $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(
   const ms=[100,250,500,1000,2500,5000].find(m=>before<m&&tot(g)>=m);
   if(ms)$("okmsg").textContent="🏆 Milestone ₹"+ms+" reached! "+g.name;
   if(done||ms)rain(["🎉","🎊","⭐","🪙","💰"],60);else rain(["💸","🪙","💰","💵"],32);
-  say("Shabash "+((users()[U]||{}).name||"")+"!")};
+  
+  // Dynamic Mahesh Babu style dialogue with real logged-in user name
+  const uObj = users()[U] || {};
+  const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+  const maheshDialogue = `${a} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
+  sayMaheshStyle(maheshDialogue);
+};
+
 $("okd").onclick=()=>$("ok").classList.remove("on");
 $("list").onclick=e=>{const i=e.target.dataset.i;if(i){const g=G();g.entries=g.entries.filter(x=>String(x.id)!==i);save();render()}};
 $("tabs").onclick=e=>{const id=e.target.dataset.g;if(id){S.cur=id;save();render()}else if(e.target.id==="newg"){$("nf").classList.toggle("on");$("nf").scrollIntoView({behavior:"smooth"})}};
@@ -859,31 +1319,14 @@ function wdAnim(a,g){
 $("wdd").onclick=()=>$("wdo").classList.remove("on");
 const ls=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 window._snd=true;window._AC=window.AudioContext;window._WAC=window.webkitAudioContext;
-const MH=`
-<div class='card'><b>🧠 Smart insights</b><div class='hint' id='sm' style='white-space:pre-wrap;color:var(--tx);line-height:1.7'></div>
-<div class='row'><button id='fz' style='flex:1;background:var(--cell);color:var(--tx)'>🧊 Streak freeze</button><button id='yr' style='flex:1;background:var(--cell);color:var(--tx)'>📅 Year review</button></div><div class='hint' id='yrt' style='white-space:pre-wrap;color:var(--tx)'></div></div>
-<div class='card'><b>🏅 Achievements</b><div id='ach' class='chips' style='justify-content:flex-start;margin-bottom:0'></div></div>
-<div class='card'><b>🎰 Daily spin & challenges</b>
-<div class='row' style='margin-top:10px'><button id='sp' style='flex:1;margin:0'>🎰 Spin</button><select id='ch' style='flex:2'><option value=''>Challenge select chey</option><option value='ten'>₹10 daily × 30 days</option><option value='inc'>₹1 → ₹2 → ₹3 increasing</option><option value='w52'>52-week challenge</option><option value='coin'>Coin jar (₹1/₹2/₹5 matrame)</option></select></div>
-<div class='hint' id='spr' style='color:var(--tx)'></div><button id='chb' style='display:none'>Do today challenge</button></div>
-<div class='card'><b>🕹️ Coin catch game</b><div class='hint' id='gt'>15 sec lo coins tap chey!</div><div id='ga'></div><button id='gs'>▶ Start</button></div>
-<div class='card'><b>🔒 Rules & style</b><div class='row' style='margin-top:8px'><div style='flex:1'><label>Lock withdraw until</label><input id='lk' type='date'></div><div style='flex:1'><label>Daily spend limit ₹</label><input id='lm' type='number' inputmode='decimal'></div><div style='flex:1;min-width:70px'><label>Goal color</label><input id='gcol' type='color' style='padding:2px;height:46px'></div></div></div>
-<div class='card'><b>💱 Savings split</b><div class='row' style='margin-top:8px'><input id='spa' type='number' inputmode='decimal' placeholder='Total ₹ amount'></div><div id='spl'></div><button id='spb'>Split & save</button><div class='hint' id='spm'></div></div>
-<div class='card'><b>📒 Money notes</b><div class='row' style='margin-top:8px'><select id='nt' style='flex:1.2'><option value='lend'>🤝 Lend (ichanu)</option><option value='borrow'>🙏 Borrow (teesukunna)</option><option value='earn'>💼 Earning</option><option value='cpn'>🎁 Coupon / offer</option></select><input id='ntx' placeholder='Name / source' style='flex:1.5'></div><div class='row' style='margin-top:8px'><input id='nam' type='number' inputmode='decimal' placeholder='₹' style='flex:1'><input id='ndt' type='date' style='flex:1.3'></div><button id='nad'>Add</button><div id='nl'></div></div>
-<div class='card'><b>🧮 Calculators</b>
-<label style='margin-top:10px'>💰 Budget 50/30/20: monthly income ₹</label><input id='bi' type='number' inputmode='decimal'><div class='hint' id='br'></div>
-<label style='margin-top:10px'>📈 Interest (RD): ₹/month · rate % · months</label><div class='row'><input id='ia' type='number' placeholder='₹/month' style='flex:1'><input id='ir' type='number' value='6.5' style='flex:1'><input id='im' type='number' value='12' style='flex:1'></div><div class='hint' id='ires'></div>
-<label style='margin-top:10px'>🔄 Plan compare: price ₹ for 28 / 56 / 84 days</label><div class='row'><input id='p28' type='number' placeholder='28d ₹' style='flex:1'><input id='p56' type='number' placeholder='56d ₹' style='flex:1'><input id='p84' type='number' placeholder='84d ₹' style='flex:1'></div><div class='hint' id='pcr'></div></div>
-<div class='card'><b>🧾 Passbook</b><div class='row' style='margin:8px 0'><input id='pq' placeholder='Search date / note / amount' style='flex:2'><button id='ud' style='flex:1;margin:0;background:var(--cell);color:var(--tx)'>↩️ Undo last</button></div><div style='overflow-x:auto'><table class='pb' id='pbt'></table></div></div>
-<div class='card'><b>⚙️ Quick settings</b><div class='row' style='margin-top:8px'><button id='snd' style='flex:1;margin:0;background:var(--cell);color:var(--tx)'>🔊 Sound on</button><button id='bt' style='flex:1;margin:0;background:var(--cell);color:var(--tx)'>🔠 Big text</button><button id='vb' style='flex:1;margin:0;background:var(--cell);color:var(--tx)'>🎤 Voice add</button></div></div>`;
-$('more').innerHTML=MH;
+
 let big=false;
-function say(t){if(window._snd&&window.speechSynthesis){try{const u=new SpeechSynthesisUtterance(t);u.lang='en-IN';speechSynthesis.speak(u)}catch(e){}}}
-function chAmt(g){const v=$('ch').value,dn=Math.max(1,Math.round((new Date(TD+'T00:00:00')-new Date(g.start+'T00:00:00'))/864e5)+1),wk=Math.min(52,Math.floor((dn-1)/7)+1);
+function chAmt(g){const v=$("ch").value,dn=Math.max(1,Math.round((new Date(TD+'T00:00:00')-new Date(g.start+'T00:00:00'))/864e5)+1),wk=Math.min(52,Math.floor((dn-1)/7)+1);
   return v==='ten'?10:v==='inc'?Math.min(dn,30):v==='w52'?wk:v==='coin'?[1,2,5][dn%3]:0}
-function pbook(){const g=G(),q=$('pq').value.trim().toLowerCase();let bal=0;
+function pbook(){const g=G(),q=$("pq").value.trim().toLowerCase();let bal=0;
   const rows=[...g.entries].sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||''))||a.id-b.id).map(e=>{bal+=e.amt;return{e,bal}}).reverse().filter(r=>!q||(r.e.date+' '+(r.e.note||'')+' '+r.e.amt+' '+(r.e.txn||'')).toLowerCase().includes(q)).slice(0,100);
-  $('pbt').innerHTML='<tr><th>Date</th><th>Details</th><th>Dr/Cr</th><th>Bal</th></tr>'+rows.map(r=>`<tr><td>${r.e.date.slice(5)}${r.e.time?'<br>'+h12(r.e.time):''}</td><td>${r.e.note||'Saved'}</td><td class='${r.e.amt<0?'dr':'cr'}'>${r.e.amt<0?'−':'+'}${Math.abs(r.e.amt)}</td><td>${Math.round(r.bal*100)/100}</td></tr>`).join('')}
+  $("pbt").innerHTML='<tr><th>Date</th><th>Details</th><th>Dr/Cr</th><th>Bal</th></tr>'+rows.map(r=>`<tr><td>${r.e.date.slice(5)}${r.e.time?'<br>'+h12(r.e.time):''}</td><td>${r.e.note||'Saved'}</td><td class='${r.e.amt<0?'dr':'cr'}'>${r.e.amt<0?'−':'+'}${Math.abs(r.e.amt)}</td><td>${Math.round(r.bal*100)/100}</td></tr>`).join('')}
+
 function more(g,by,t,rem,D,tg,st,all){
   window._st=st;
   const ymd=n=>{const d=new Date(TD+'T00:00:00');d.setDate(d.getDate()+n);return iso(d)},Y=ymd(-1),L=[];
@@ -895,58 +1338,58 @@ function more(g,by,t,rem,D,tg,st,all){
   if(miss&&rem>0)L.push('🔄 Nenna miss ayav, ivala '+f(tg*2)+' save chesthe catch-up');
   if((by[TD]||0)<=0&&rem>0)L.push('💡 Ivala inka save cheyyaledu, '+f(tg)+' chey!');
   L.push('🎬 Total '+f(all)+' = '+Math.floor(all/10)+' chai ☕'+(g.target>0?' · target lo '+Math.round(t/g.target*100)+'%':''));
-  $('sm').textContent=L.join('\n');
+  $("sm").textContent=L.join('\n');
   const hs=+(ls('rsbhs')||0);
   const A=[['🥇 First save',g.entries.some(e=>e.amt>0)],['💯 ₹100 club',all>=100],['🏆 ₹500 club',all>=500],['💎 ₹2000 club',all>=2000],['🔥 7-day streak',st>=7],['📆 30-day streak',st>=30],['🎯 Goal done',S.goals.some(x=>tot(x)>=x.target)],['🧊 Freeze used',(g.fr||[]).length>0],['🎲 No-spend',(g.ns||[]).length>0],['🕹️ Gamer',hs>0]];
-  $('ach').innerHTML=A.map(a=>`<span class='ach ${a[1]?'':'off'}'>${a[0]}</span>`).join('');
+  $("ach").innerHTML=A.map(a=>`<span class='ach ${a[1]?'':'off'}'>${a[0]}</span>`).join('');
   let o=null;try{o=JSON.parse(ls('rsbspin'))}catch(e){}
-  $('spr').textContent=(o&&o.d===TD)?'🎰 Ivala spin: '+o.t:'';
-  $('ch').value=g.ch||'';const ca=chAmt(g);$('chb').style.display=ca>0?'block':'none';$('chb').textContent='Do today challenge: ₹'+ca;
-  $('lk').value=g.lock||'';$('lm').value=g.lim||'';$('gcol').value=g.color||'#2563eb';
-  $('pb').style.background=g.color||'';document.querySelectorAll('.tab.on[data-g]').forEach(e=>e.style.background=g.color||'');
+  $("spr").textContent=(o&&o.d===TD)?'🎰 Ivala spin: '+o.t:'';
+  $("ch").value=g.ch||'';const ca=chAmt(g);$("chb").style.display=ca>0?'block':'none';$("chb").textContent='Do today challenge: ₹'+ca;
+  $("lk").value=g.lock||'';$("lm").value=g.lim||'';$("gcol").value=g.color||'#2563eb';
+  $("pb").style.background=g.color||'';document.querySelectorAll('.tab.on[data-g]').forEach(e=>e.style.background=g.color||'');
   const key=S.goals.map(x=>x.id).join();
-  if($('spl').dataset.k!==key){$('spl').dataset.k=key;$('spl').innerHTML=S.goals.map(x=>`<div class='row' style='margin-top:6px;align-items:center'><span style='flex:2'>${x.emoji} ${x.name}</span><input data-sp='${x.id}' type='number' value='${Math.round(100/S.goals.length)}' style='flex:1'></div>`).join('')}
+  if($("spl").dataset.k!==key){$("spl").dataset.k=key;$("spl").innerHTML=S.goals.map(x=>`<div class='row' style='margin-top:6px;align-items:center'><span style='flex:2'>${x.emoji} ${x.name}</span><input data-sp='${x.id}' type='number' value='${Math.round(100/S.goals.length)}' style='flex:1'></div>`).join('')}
   const N=S.notes||[],tp={lend:'🤝 Lend',borrow:'🙏 Borrow',earn:'💼 Earning',cpn:'🎁 Coupon'},sm2=k=>N.filter(n=>n.t===k).reduce((a,n)=>a+(n.amt||0),0);
-  $('nl').innerHTML=(N.length?`<div class='hint'>Lend ${f(sm2('lend'))} · Borrow ${f(sm2('borrow'))} · Earnings ${f(sm2('earn'))}</div>`:'')+N.map(n=>`<div class='e'><span>${tp[n.t]} · ${n.txt||''}<br><small style='color:var(--mu)'>${n.d||''}${n.d&&n.t==='cpn'&&n.d<TD?' · expired':''}</small></span><b>${n.amt?'₹'+n.amt:''}</b><button data-n='${n.id}'>✕</button></div>`).join('');
+  $("nl").innerHTML=(N.length?`<div class='hint'>Lend ${f(sm2('lend'))} · Borrow ${f(sm2('borrow'))} · Earnings ${f(sm2('earn'))}</div>`:'')+N.map(n=>`<div class='e'><span>${tp[n.t]} · ${n.txt||''}<br><small style='color:var(--mu)'>${n.d||''}${n.d&&n.t==='cpn'&&n.d<TD?' · expired':''}</small></span><b>${n.amt?'₹'+n.amt:''}</b><button data-n='${n.id}'>✕</button></div>`).join('');
   pbook()}
-$('fz').onclick=()=>{const g=G();g.fr=g.fr||[];const b=new Date(TD+'T00:00:00').getTime(),y=iso(new Date(b-864e5)),w=iso(new Date(b-6*864e5));
+$("fz").onclick=()=>{const g=G();g.fr=g.fr||[];const b=new Date(TD+'T00:00:00').getTime(),y=iso(new Date(b-864e5)),w=iso(new Date(b-6*864e5));
   if(g.fr.some(d=>d>=w))return alert('Vaaraniki 1 freeze matrame 🧊');g.fr.push(y);save();render();alert('🧊 Nenna roju streak freeze ayindi')};
-$('yr').onclick=()=>{const g=G(),yy=TD.slice(0,4),by={},bm={};g.entries.filter(e=>e.date.startsWith(yy)&&e.amt>0).forEach(e=>{by[e.date]=(by[e.date]||0)+e.amt;const m=e.date.slice(0,7);bm[m]=(bm[m]||0)+e.amt});
+$("yr").onclick=()=>{const g=G(),yy=TD.slice(0,4),by={},bm={};g.entries.filter(e=>e.date.startsWith(yy)&&e.amt>0).forEach(e=>{by[e.date]=(by[e.date]||0)+e.amt;const m=e.date.slice(0,7);bm[m]=(bm[m]||0)+e.amt});
   const tt=Object.values(by).reduce((a,x)=>a+x,0),bd=Object.entries(by).sort((a,b)=>b[1]-a[1])[0],bo=Object.entries(bm).sort((a,b)=>b[1]-a[1])[0];
-  $('yrt').textContent='📅 '+yy+' Review\n💰 Total saved: '+f(tt)+'\n🗓️ Saving days: '+Object.keys(by).length+(bo?'\n🏆 Best month: '+bo[0]+' ('+f(bo[1])+')':'')+(bd?'\n⭐ Best day: '+bd[0]+' ('+f(bd[1])+')':'')+'\n🔥 Current streak: '+(window._st||0)};
-$('sp').onclick=()=>{let o=null;try{o=JSON.parse(ls('rsbspin'))}catch(e){}if(o&&o.d===TD){$('spr').textContent='🎰 Ivala spin already chesav: '+o.t;return}
+  $("yrt").textContent='📅 '+yy+' Review\n💰 Total saved: '+f(tt)+'\n🗓️ Saving days: '+Object.keys(by).length+(bo?'\n🏆 Best month: '+bo[0]+' ('+f(bo[1])+')':'')+(bd?'\n⭐ Best day: '+bd[0]+' ('+f(bd[1])+')':'')+'\n🔥 Current streak: '+(window._st||0)};
+$("sp").onclick=()=>{let o=null;try{o=JSON.parse(ls('rsbspin'))}catch(e){}if(o&&o.d===TD){$("spr").textContent='🎰 Ivala spin already chesav: '+o.t;return}
   const A=['Ivala ₹15 save chey 💪','No-spend day try chey 🎲','Chai kharchu skip chesi ₹10 save chey ☕','Bonus: ₹5 extra save chey 🪙','Ivala withdraw cheyyaku! 🔒','Round-up save try chey 🪙','Friend ki savings app cheppu 😄'],t=A[Math.floor(Math.random()*A.length)];
-  try{localStorage.setItem('rsbspin',JSON.stringify({d:TD,t}))}catch(e){}$('spr').textContent='🎰 '+t};
-$('ch').onchange=e=>{G().ch=e.target.value;save();render()};
-$('chb').onclick=()=>{const a=chAmt(G());if(a>0){cur=String(a);upd();$('note').value='Challenge';$('add').click()}};
-$('gs').onclick=()=>{let sc=0,tl=15;const a=$('ga');a.innerHTML='';$('gt').textContent='Score 0 · 15s';
-  const sp=setInterval(()=>{const c=document.createElement('span');c.textContent=['💰','🪙','💵'][Math.floor(Math.random()*3)];c.style.left=Math.random()*85+'%';c.style.top=Math.random()*80+'%';c.onclick=()=>{sc++;c.remove();$('gt').textContent='Score '+sc+' · '+tl+'s'};a.appendChild(c);setTimeout(()=>c.remove(),1100)},420);
-  const iv=setInterval(()=>{tl--;$('gt').textContent='Score '+sc+' · '+tl+'s';if(tl<=0){clearInterval(iv);clearInterval(sp);a.innerHTML='';let hs=+(ls('rsbhs')||0);if(sc>hs){hs=sc;try{localStorage.setItem('rsbhs',hs)}catch(e){}}$('gt').textContent='🎉 Final score '+sc+' · High score '+hs;render()}},1000)};
-$('lk').onchange=e=>{G().lock=e.target.value;save()};$('lm').onchange=e=>{G().lim=parseFloat(e.target.value)||0;save()};$('gcol').onchange=e=>{G().color=e.target.value;save();render()};
-$('spb').onclick=()=>{const a=parseFloat($('spa').value),ins=[...document.querySelectorAll('[data-sp]')];if(!(a>0))return;
-  const sum=ins.reduce((x,i)=>x+(parseFloat(i.value)||0),0);if(Math.abs(sum-100)>.5){$('spm').textContent='Total % 100 undali (ippudu '+sum+'%)';return}
+  try{localStorage.setItem('rsbspin',JSON.stringify({d:TD,t}))}catch(e){}$("spr").textContent='🎰 '+t};
+$("ch").onchange=e=>{G().ch=e.target.value;save();render()};
+$("chb").onclick=()=>{const a=chAmt(G());if(a>0){cur=String(a);upd();$("note").value='Challenge';$("add").click()}};
+$("gs").onclick=()=>{let sc=0,tl=15;const a=$("ga");a.innerHTML='';$("gt").textContent='Score 0 · 15s';
+  const sp=setInterval(()=>{const c=document.createElement('span');c.textContent=['💰','🪙','💵'][Math.floor(Math.random()*3)];c.style.left=Math.random()*85+'%';c.style.top=Math.random()*80+'%';c.onclick=()=>{sc++;c.remove();$("gt").textContent='Score '+sc+' · '+tl+'s'};a.appendChild(c);setTimeout(()=>c.remove(),1100)},420);
+  const iv=setInterval(()=>{tl--;$("gt").textContent='Score '+sc+' · '+tl+'s';if(tl<=0){clearInterval(iv);clearInterval(sp);a.innerHTML='';let hs=+(ls('rsbhs')||0);if(sc>hs){hs=sc;try{localStorage.setItem('rsbhs',hs)}catch(e){}}$("gt").textContent='🎉 Final score '+sc+' · High score '+hs;render()}},1000)};
+$("lk").onchange=e=>{G().lock=e.target.value;save()};$("lm").onchange=e=>{G().lim=parseFloat(e.target.value)||0;save()};
+$("gcol").onchange=e=>{G().color=e.target.value;save();renderColorBar();render()};
+
+$("spb").onclick=()=>{const a=parseFloat($("spa").value),ins=[...document.querySelectorAll('[data-sp]')];if(!(a>0))return;
+  const sum=ins.reduce((x,i)=>x+(parseFloat(i.value)||0),0);if(Math.abs(sum-100)>.5){$("spm").textContent='Total % 100 undali (ippudu '+sum+'%)';return}
   ins.forEach(i=>{const p=parseFloat(i.value)||0,g=S.goals.find(x=>x.id===i.dataset.sp);if(g&&p>0)g.entries.push({id:Date.now()+Math.floor(Math.random()*1e4),date:TD,time:nowT(),amt:Math.round(a*p)/100,note:'Split save',txn:'SP'+Date.now().toString().slice(-8)})});
-  $('spa').value='';$('spm').textContent='✅ Split ayindi';save();render()};
-$('nad').onclick=()=>{const a=parseFloat($('nam').value)||0,x=$('ntx').value.trim();if(!x&&!a)return;S.notes=S.notes||[];S.notes.push({id:Date.now(),t:$('nt').value,txt:x,amt:a,d:$('ndt').value});
-  if($('nt').value==='earn'&&a>0)alert('💡 Earning ayindi! 20% = ₹'+Math.round(a*20)/100+' save cheyyi');$('ntx').value='';$('nam').value='';save();render()};
-$('nl').onclick=e=>{const i=e.target.dataset.n;if(i){S.notes=(S.notes||[]).filter(n=>String(n.id)!==i);save();render()}};
-function calc(){const b=parseFloat($('bi').value);$('br').textContent=b>0?'Needs '+f(b*.5)+' · Wants '+f(b*.3)+' · Savings '+f(b*.2):'';
-  const P=parseFloat($('ia').value),rt=parseFloat($('ir').value)||0,n=parseInt($('im').value)||0;
-  if(P>0&&n>0){const r=rt/1200,fv=r?P*((Math.pow(1+r,n)-1)/r)*(1+r):P*n;$('ires').textContent='Deposit '+f(P*n)+' → '+f(fv)+' (interest '+f(fv-P*n)+')'}else $('ires').textContent='';
+  $("spa").value='';$("spm").textContent='✅ Split ayindi';save();render()};
+$("nad").onclick=()=>{const a=parseFloat($("nam").value)||0,x=$("ntx").value.trim();if(!x&&!a)return;S.notes=S.notes||[];S.notes.push({id:Date.now(),t:$("nt").value,txt:x,amt:a,d:$("ndt").value});
+  if($("nt").value==='earn'&&a>0)alert('💡 Earning ayindi! 20% = ₹'+Math.round(a*20)/100+' save cheyyi');$("ntx").value='';$("nam").value='';save();render()};
+$("nl").onclick=e=>{const i=e.target.dataset.n;if(i){S.notes=(S.notes||[]).filter(n=>String(n.id)!==i);save();render()}};
+function calc(){const b=parseFloat($("bi").value);$("br").textContent=b>0?'Needs '+f(b*.5)+' · Wants '+f(b*.3)+' · Savings '+f(b*.2):'';
+  const P=parseFloat($("ia").value),rt=parseFloat($("ir").value)||0,n=parseInt($("im").value)||0;
+  if(P>0&&n>0){const r=rt/1200,fv=r?P*((Math.pow(1+r,n)-1)/r)*(1+r):P*n;$("ires").textContent='Deposit '+f(P*n)+' → '+f(fv)+' (interest '+f(fv-P*n)+')'}else $("ires").textContent='';
   const pr=[[28,'p28'],[56,'p56'],[84,'p84']].map(x=>[x[0],parseFloat($(x[1]).value)]).filter(x=>x[1]>0);
-  if(pr.length>1){const m=Math.min(...pr.map(x=>x[1]/x[0]));$('pcr').textContent=pr.map(x=>x[0]+'d: '+f(x[1]/x[0])+'/day'+(x[1]/x[0]===m?' ✅ cheapest':'')).join(' · ')}else $('pcr').textContent=''}
+  if(pr.length>1){const m=Math.min(...pr.map(x=>x[1]/x[0]));$("pcr").textContent=pr.map(x=>x[0]+'d: '+f(x[1]/x[0])+'/day'+(x[1]/x[0]===m?' ✅ cheapest':'')).join(' · ')}else $("pcr").textContent=''}
 ['bi','ia','ir','im','p28','p56','p84'].forEach(i=>$(i).oninput=calc);
-$('pq').oninput=pbook;
-$('ud').onclick=()=>{const g=G();if(!g.entries.length)return;const m=Math.max(...g.entries.map(e=>e.id));if(confirm('Last entry undo cheyyala?')){g.entries=g.entries.filter(e=>e.id!==m);save();render()}};
-$('snd').onclick=()=>{window._snd=!window._snd;window.AudioContext=window._snd?window._AC:null;window.webkitAudioContext=window._snd?window._WAC:null;$('snd').textContent=window._snd?'🔊 Sound on':'🔇 Sound off'};
-$('bt').onclick=()=>{big=!big;document.body.style.zoom=big?1.18:1;$('bt').textContent=big?'🔠 Normal text':'🔠 Big text'};
-$('vb').onclick=()=>{const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return alert('Ee browser lo voice support ledu');const r=new R();r.lang='en-IN';
-  r.onresult=e=>{const m=(e.results[0][0].transcript||'').match(/\d+(\.\d+)?/);if(m){cur=m[0];upd();$('note').value='Voice entry';$('add').click()}else alert('Amount artham kaaledu')};r.onerror=()=>alert('Voice error, malli try chey');r.start()};
+$("pq").oninput=pbook;
+$("ud").onclick=()=>{const g=G();if(!g.entries.length)return;const m=Math.max(...g.entries.map(e=>e.id));if(confirm('Last entry undo cheyyala?')){g.entries=g.entries.filter(e=>e.id!==m);save();render()}};
+$("snd").onclick=()=>{window._snd=!window._snd;window.AudioContext=window._snd?window._AC:null;window.webkitAudioContext=window._snd?window._WAC:null;$("snd").textContent=window._snd?'🔊 Sound on':'🔇 Sound off'};
+$("bt").onclick=()=>{big=!big;document.body.style.zoom=big?1.18:1;$("bt").textContent=big?'🔠 Normal text':'🔠 Big text'};
 $('eye').onclick=()=>{window._hide=!window._hide;$('eye').textContent=window._hide?'🙈':'👁️';render()};
 async function ask(btn,p){const sm=window._sm;if(!sm)return;btn.disabled=true;$('aio').textContent='Thinking...';try{await sm(p,{cache:false,onText:({text})=>{$('aio').textContent=text}})}catch(e){$('aio').textContent='AI ippudu available ledu, malli try chey.'}btn.disabled=false}
-$('aiw').onclick=()=>{const g=G(),by={};g.entries.forEach(e=>by[e.date]=(by[e.date]||0)+e.amt);let s='';for(let i=6;i>=0;i--){const d=new Date(TD+'T00:00:00');d.setDate(d.getDate()-i);const k=iso(d);s+=k+': '+(by[k]||0)+'; '}
-  ask($('aiw'),'Weekly savings review for an Indian student. Goal '+g.name+' target Rs '+g.target+', saved Rs '+tot(g)+'. Daily net savings last 7 days: '+s+'. In Telugu-English mix (Telugu in English letters), plain text, under 180 words: what went well, which day was missed, one improvement, and a score out of 10. No markdown symbols.')};
-$('aip').onclick=()=>ask($('aip'),'Indian prepaid mobile user paying Rs '+G().target+' per recharge. In Telugu-English mix (Telugu in English letters), plain text, under 200 words: how to choose the cheapest recharge plan (per-day cost across 28/56/84 day validity, daily data needed, skipping unused OTT bundles) and 4 practical tips. Do not quote exact current plan prices. No markdown symbols.');
+$("aiw").onclick=()=>{const g=G(),by={};g.entries.forEach(e=>by[e.date]=(by[e.date]||0)+e.amt);let s='';for(let i=6;i>=0;i--){const d=new Date(TD+'T00:00:00');d.setDate(d.getDate()-i);const k=iso(d);s+=k+': '+(by[k]||0)+'; '}
+  ask($("aiw"),'Weekly savings review for an Indian student. Goal '+g.name+' target Rs '+g.target+', saved Rs '+tot(g)+'. Daily net savings last 7 days: '+s+'. In Telugu-English mix (Telugu in English letters), plain text, under 180 words: what went well, which day was missed, one improvement, and a score out of 10. No markdown symbols.')};
+$("aip").onclick=()=>ask($("aip"),'Indian prepaid mobile user paying Rs '+G().target+' per recharge. In Telugu-English mix (Telugu in English letters), plain text, under 200 words: how to choose the cheapest recharge plan (per-day cost across 28/56/84 day validity, daily data needed, skipping unused OTT bundles) and 4 practical tips. Do not quote exact current plan prices. No markdown symbols.');
 function dayList(g){
   const y=new Date(TD+"T00:00:00");y.setDate(y.getDate()-1);const Y=iso(y),R=n=>Math.round(n*100)/100;
   const ds=[...new Set([...g.entries.map(e=>e.date),TD,Y])].sort().reverse();
@@ -982,7 +1425,6 @@ function playSplashChime() {
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
     if (ctx.state === 'suspended') ctx.resume();
-    // Fintech chord progression: C5, E5, G5, C6 + gold coin sparkle
     const notes = [
       { f: 523.25, t: 0.00, dur: 0.6, gain: 0.16, type: 'sine' },
       { f: 659.25, t: 0.12, dur: 0.6, gain: 0.16, type: 'triangle' },
@@ -1080,7 +1522,6 @@ $("btn-replay-splash").onclick = () => {
   runSplashScreen(true);
 };
 
-// Start the opening animation on load
 runSplashScreen(true);
 
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
