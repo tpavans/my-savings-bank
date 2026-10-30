@@ -1,0 +1,22 @@
+{
+  "name": "my-savings-bank",
+  "version": "1.0.0",
+  "description": "My Savings Bank - Smart Personal Savings & Goals Tracker",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "web": "python -m http.server 8080 --directory savings-app-1"
+  },
+  "keywords": [
+    "savings",
+    "bank",
+    "tracker",
+    "fintech",
+    "goals"
+  ],
+  "author": "My Savings Bank",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
+}

@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Builds & output
+dist/
+out/
+build/
+*.exe
+
+# System & logs
+*.log
+.DS_Store
+Thumbs.db
