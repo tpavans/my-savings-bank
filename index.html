@@ -845,6 +845,149 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   color: #93c5fd;
 }
 
+
+/* ==========================================================
+   INTERACTIVE PIGGY BANK & BREAKING CELEBRATION STYLES
+========================================================== */
+.piggy-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.piggy-wrapper {
+  width: 140px;
+  height: 115px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+.piggy-wrapper:hover {
+  transform: scale(1.06);
+}
+.piggy-wrapper.jiggle {
+  animation: piggyJiggle 0.45s ease-in-out;
+}
+@keyframes piggyJiggle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.08) rotate(-6deg); }
+  50% { transform: scale(0.96) rotate(6deg); }
+  75% { transform: scale(1.04) rotate(-3deg); }
+}
+.piggy-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+}
+.piggy-status-badge {
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.piggy-status-badge.full {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  color: #fbbf24;
+  animation: pulseGlow 1.5s infinite alternate;
+}
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 4px rgba(245, 158, 11, 0.4); }
+  100% { box-shadow: 0 0 16px rgba(245, 158, 11, 0.85); }
+}
+.piggy-hammer {
+  position: absolute;
+  top: -30px;
+  right: -20px;
+  font-size: 44px;
+  display: none;
+  z-index: 10;
+  transform-origin: bottom right;
+}
+.piggy-wrapper.smashing .piggy-hammer {
+  display: block;
+  animation: hammerStrike 0.45s ease-in-out forwards;
+}
+@keyframes hammerStrike {
+  0% { transform: rotate(45deg) translate(-20px, -20px); opacity: 0; }
+  40% { transform: rotate(55deg) translate(0, 0); opacity: 1; }
+  75% { transform: rotate(-25deg) translate(-30px, 30px); }
+  100% { transform: rotate(0deg) translate(-25px, 25px); opacity: 0; }
+}
+.piggy-wrapper.broken {
+  filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.6));
+  animation: piggyShake 0.4s ease;
+}
+@keyframes piggyShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px) rotate(-4deg); }
+  40%, 80% { transform: translateX(8px) rotate(4deg); }
+}
+.btn-break-piggy {
+  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5), 0 0 25px rgba(234, 88, 12, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  animation: breakPulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes breakPulse {
+  0% { transform: scale(0.98); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); }
+  100% { transform: scale(1.03); box-shadow: 0 8px 26px rgba(234, 88, 12, 0.7); }
+}
+.break-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 20px;
+}
+.break-modal.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+.break-modal-box {
+  background: radial-gradient(ellipse at 50% 20%, #173278 0%, #07153b 80%);
+  border: 2px solid #fbbf24;
+  border-radius: 24px;
+  padding: 24px 20px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.4);
+  animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes modalPop {
+  from { transform: scale(0.85) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes trophyBounce {
+  from { transform: translateY(0) rotate(-4deg); }
+  to { transform: translateY(-8px) rotate(4deg); }
+}
+
 </style>
 </head>
 <body>
@@ -933,9 +1076,97 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 
   <div class="card">
     <div style="font-size:13px;color:var(--mu)" id="gname"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center"><div class="big" id="total">₹0</div><div id="pile"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><div class="big" id="total">₹0</div><div id="pile" style="display:flex;align-items:center;justify-content:center">
+      <div class="piggy-container" id="piggy-container">
+        <div class="piggy-wrapper" id="piggy-wrapper" title="Tap to shake piggy bank! 🐷">
+          <div class="piggy-hammer" id="piggy-hammer">🔨</div>
+          <svg viewBox="0 0 160 130" class="piggy-svg" id="piggy-svg-el">
+            <defs>
+              <linearGradient id="piggyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f472b6"/>
+                <stop offset="50%" stop-color="#ec4899"/>
+                <stop offset="100%" stop-color="#be185d"/>
+              </linearGradient>
+              <linearGradient id="piggyGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fde047"/>
+                <stop offset="50%" stop-color="#eab308"/>
+                <stop offset="100%" stop-color="#ca8a04"/>
+              </linearGradient>
+              <linearGradient id="goldCoinFill" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#ca8a04"/>
+                <stop offset="50%" stop-color="#facc15"/>
+                <stop offset="100%" stop-color="#fef08a"/>
+              </linearGradient>
+              <clipPath id="bellyClip">
+                <ellipse cx="80" cy="74" rx="46" ry="34"/>
+              </clipPath>
+            </defs>
+
+            <!-- Shadow -->
+            <ellipse cx="80" cy="120" rx="52" ry="7" fill="rgba(0,0,0,0.3)"/>
+
+            <!-- Legs -->
+            <rect x="42" y="96" width="14" height="22" rx="6" fill="#9d174d"/>
+            <rect x="62" y="100" width="14" height="18" rx="6" fill="#831843"/>
+            <rect x="88" y="100" width="14" height="18" rx="6" fill="#831843"/>
+            <rect x="106" y="96" width="14" height="22" rx="6" fill="#9d174d"/>
+
+            <!-- Curly Tail -->
+            <path d="M 28 65 Q 16 55 22 45 Q 30 40 24 55" stroke="#ec4899" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+            <!-- Main Piggy Body -->
+            <ellipse cx="80" cy="70" rx="58" ry="44" fill="url(#piggyGrad)" id="piggy-main-body" stroke="#fbcfe8" stroke-width="1.5"/>
+
+            <!-- Translucent Belly Fill (Fills dynamically with golden coin layer!) -->
+            <g clip-path="url(#bellyClip)">
+              <rect id="piggy-fill-rect" x="20" y="110" width="120" height="0" fill="url(#goldCoinFill)" opacity="0.85"/>
+              <text id="piggy-belly-coins" x="80" y="80" text-anchor="middle" font-size="16" opacity="0.8">🪙</text>
+            </g>
+
+            <!-- Coin Slot -->
+            <rect x="68" y="27" width="24" height="4" rx="2" fill="#831843" stroke="#ffd700" stroke-width="1"/>
+
+            <!-- Ears -->
+            <polygon points="112,38 126,20 132,40" fill="#f472b6" stroke="#be185d" stroke-width="1.5"/>
+            <polygon points="116,36 124,24 128,38" fill="#fda4af"/>
+
+            <!-- Eye -->
+            <circle cx="120" cy="58" r="4.5" fill="#1e293b"/>
+            <circle cx="122" cy="56" r="1.5" fill="#ffffff"/>
+
+            <!-- Snout / Nose -->
+            <ellipse cx="138" cy="72" rx="14" ry="11" fill="#f472b6" stroke="#be185d" stroke-width="1.5"/>
+            <ellipse cx="134" cy="72" rx="2.5" ry="4" fill="#831843"/>
+            <ellipse cx="142" cy="72" rx="2.5" ry="4" fill="#831843"/>
+
+            <!-- Cheek Blush -->
+            <ellipse cx="118" cy="74" rx="6" ry="3.5" fill="#fda4af" opacity="0.6"/>
+
+            <!-- Cracks (Visible when broken) -->
+            <g id="piggy-cracks" style="display:none" stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+              <path d="M 80 28 L 72 52 L 86 70 L 68 95"/>
+              <path d="M 72 52 L 48 58 L 36 72"/>
+              <path d="M 86 70 L 105 76 L 122 68"/>
+              <path d="M 86 70 L 92 98"/>
+            </g>
+          </svg>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px">
+          <span class="piggy-status-badge" id="piggy-status-badge">0% Full</span>
+          <button id="btn-demo-smash" style="display:inline-block;width:auto;margin:0;padding:2px 8px;font-size:10px;background:rgba(255,255,255,0.12);color:#93c5fd;border:1px solid rgba(255,255,255,0.2);border-radius:6px;cursor:pointer">Demo 🔨</button>
+        </div>
+      </div>
+    </div></div>
     <div class="bar"><i id="pb"></i></div>
-    <div class="hint" id="pct"></div><a id="rch" href="https://www.jio.com/selfcare/recharge/mobility/" target="_blank" rel="noopener" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:var(--ok);color:#fff;text-align:center;font-weight:600;text-decoration:none">🔄 Recharge now (Jio)</a>
+    <div class="hint" id="pct"></div>
+    <!-- Break Piggy Bank Action (Appears when 100% target or on demand!) -->
+    <div id="break-piggy-section" style="display:none;margin-top:12px;text-align:center">
+      <button id="btn-break-piggy" class="btn-break-piggy">
+        <span style="font-size:20px">🔨</span>
+        <span>BREAK PIGGY BANK! (పగలగొట్టండి!)</span>
+        <span style="font-size:20px">💥</span>
+      </button>
+    </div><a id="rch" href="https://www.jio.com/selfcare/recharge/mobility/" target="_blank" rel="noopener" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:var(--ok);color:#fff;text-align:center;font-weight:600;text-decoration:none">🔄 Recharge now (Jio)</a>
     <div class="row" style="margin-top:14px">
       <div class="stat"><b id="rem">₹0</b><span>Inka kavali</span></div>
       <div class="stat"><b id="day">-</b><span>Plan day</span></div>
@@ -1317,7 +1548,25 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     </div>
   </div>
 
-  <div class="card">
+  
+  <!-- Celebrity Voice Coach Selector (Prabhas & Mahesh Babu) -->
+  <div class="card" style="border:1.5px solid rgba(245,158,11,0.35);background:radial-gradient(ellipse at top left, rgba(245,158,11,0.12) 0%, var(--card) 70%)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b>👑 Celebrity Voice Coach (హీరో వాయిస్)</b>
+      <span class="badge" id="cur-voice-badge" style="background:rgba(245,158,11,0.25);color:#fbbf24;border:1px solid #f59e0b;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700">👑 Prabhas</span>
+    </div>
+    <div class="hint" style="margin-top:4px">డబ్బులు వేసినప్పుడు, వేకప్ &amp; వర్కౌట్ కి ఉత్సాహం ఇచ్చే వాయిస్:</div>
+    <div class="chips" id="voice-coach-chips" style="justify-content:flex-start;margin-top:10px">
+      <button class="tab on" data-coach="prabhas">👑 Prabhas (Darling Style)</button>
+      <button class="tab" data-coach="mahesh">⭐ Mahesh Babu (Punch Style)</button>
+    </div>
+    <div class="row" style="margin-top:8px;gap:6px">
+      <button id="btn-test-prabhas-voice" style="flex:1;margin:0;padding:8px 10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:11px;font-weight:700;border:0;border-radius:10px;cursor:pointer">🔊 Prabhas: "Darling!"</button>
+      <button id="btn-test-mahesh-voice" style="flex:1;margin:0;padding:8px 10px;background:var(--cell);color:var(--tx);font-size:11px;border:1px solid var(--bd);border-radius:10px;cursor:pointer">🔊 Mahesh: "Super!"</button>
+    </div>
+  </div>
+
+<div class="card">
     <b>🎯 Goal Settings</b>
     <div class="row">
       <div style="flex:1"><label>Start date</label><input id="st" type="date"></div>
@@ -1342,7 +1591,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   <div class="card" id="version-card" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px">
     <div>
       <b style="font-size:14px">App Version</b>
-      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.3.0 · Up to date ✅</div>
+      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.4.0 · Up to date ✅</div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button id="btn-settings-update" style="display:none;width:auto;margin:0;padding:7px 15px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:12px;font-weight:700;border:0;border-radius:10px;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer">Update Now ⚡</button>
@@ -1570,7 +1819,7 @@ function addVoiceEntryDirect(amt, spokenText) {
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${amt} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
-  sayMaheshStyle(maheshDialogue);
+  speakCelebrity("add_money", { amt: amt, goalName: g.name });
 }
 
 function startVoiceEntry() {
@@ -1651,6 +1900,7 @@ function render(){
   $("del").style.display=S.goals.length>1?"":"none";
   renderColorBar();
 try{renderHabits();}catch(e){}
+try{renderPiggyBank(g, t);}catch(e){}
 }
 var cur="";
 function upd(){$("disp").textContent=cur||"0";$("amt").value=cur}
@@ -1675,7 +1925,7 @@ $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${a} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
-  sayMaheshStyle(maheshDialogue);
+  speakCelebrity("add_money", { amt: amt, goalName: g.name });
 };
 
 $("okd").onclick=()=>$("ok").classList.remove("on");
@@ -2581,13 +2831,324 @@ if ($("home-quick-workout")) {
   };
 }
 
+
+// ==========================================================
+// CELEBRITY VOICE COACH ENGINE (PRABHAS & MAHESH BABU)
+// ==========================================================
+let curVoiceCoach = localStorage.getItem("rsb_voice_coach") || "prabhas";
+
+function setVoiceCoach(coach) {
+  curVoiceCoach = coach;
+  try { localStorage.setItem("rsb_voice_coach", coach); } catch(e) {}
+  updateVoiceCoachUI();
+}
+
+function updateVoiceCoachUI() {
+  if ($("cur-voice-badge")) {
+    $("cur-voice-badge").textContent = curVoiceCoach === "prabhas" ? "👑 Prabhas" : "⭐ Mahesh Babu";
+  }
+  const chips = $("voice-coach-chips");
+  if (chips) {
+    chips.querySelectorAll(".tab").forEach(b => {
+      b.classList.toggle("on", b.dataset.coach === curVoiceCoach);
+    });
+  }
+}
+
+function speakCelebrity(type, data = {}) {
+  if (!window._snd || !window.speechSynthesis) return;
+  try {
+    window.speechSynthesis.cancel();
+    const uObj = users()[U] || {};
+    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+    const g = G() || { name: "Savings Goal" };
+    let text = "";
+    
+    if (curVoiceCoach === "prabhas") {
+      // Prabhas Rebel Star / Darling Style
+      if (type === "add_money") {
+        text = `${data.amt || ""} rupees mee savings bank ki add ayindi darling! Mee goal ${data.goalName || g.name} kosam... Thaggedhe le darling ${uName}!`;
+      } else if (type === "goal_complete") {
+        text = `Darling ${uName}! Record baddhalu kottav darling... Goal ${data.goalName || g.name} target motham reach ayindi! Pandaga chesko darling!`;
+      } else if (type === "break_piggy") {
+        text = `Baddhalayindi darling! Piggy bank baddhalu kottav... Super discipline darling ${uName}!`;
+      } else if (type === "wakeup_ontime") {
+        text = `Super darling ${uName}! 4:30 AM ki lechavu... early morning lechinodu eppatiki odipodu darling!`;
+      } else if (type === "wakeup_late") {
+        text = `Good morning darling ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu darling!`;
+      } else if (type === "workout_complete") {
+        text = `Keka darling ${uName}! Home workout complete chesav... Fitness unte manalni evaru aapanu leru darling!`;
+      } else if (type === "water_complete") {
+        text = `Good job darling ${uName}! Roju 2 liters water tagavu, hydration is power darling!`;
+      } else if (type === "test_prabhas" || type === "test") {
+        text = `Darling ${uName}! Taggedhe le darling... My Savings Bank lo ninnu evaru aapaleru!`;
+      } else if (type === "custom") {
+        text = data.text || "";
+      }
+    } else {
+      // Mahesh Babu Punch Style
+      if (type === "add_money") {
+        text = `${data.amt || ""} rupees mee savings bank ki add ayindi, mee goal ${data.goalName || g.name} kosam... Super ${uName}!`;
+      } else if (type === "goal_complete") {
+        text = `Mind blowing ${uName}! Goal ${data.goalName || g.name} complete chesav... Success ante idhi!`;
+      } else if (type === "break_piggy") {
+        text = `Piggy bank smash chesav ${uName}! Nee target complete ayindi, super!`;
+      } else if (type === "wakeup_ontime") {
+        text = `Super ${uName}! 4:30 AM ki lechavu... early morning discipline unte victory confirm!`;
+      } else if (type === "wakeup_late") {
+        text = `Good morning ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!`;
+      } else if (type === "workout_complete") {
+        text = `Keka ${uName}! Home workout complete chesav... nee health e nee real wealth!`;
+      } else if (type === "water_complete") {
+        text = `Good job ${uName}! Roju 2 liters water tagavu, hydration is power!`;
+      } else if (type === "test_mahesh" || type === "test") {
+        text = `Hey ${uName}! Okkasari commit aithe naa maata nene vinanu... Save smart!`;
+      } else if (type === "custom") {
+        text = data.text || "";
+      }
+    }
+
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const teluguVoice = voices.find(v => v.lang === "te-IN" || v.lang === "te_IN");
+    const indianVoice = voices.find(v => v.lang === "en-IN" || v.name.includes("India"));
+    if (teluguVoice) u.voice = teluguVoice;
+    else if (indianVoice) u.voice = indianVoice;
+
+    if (curVoiceCoach === "prabhas") {
+      u.pitch = 0.82; // Deep, calm, baritone tone
+      u.rate = 0.98;
+    } else {
+      u.pitch = 0.94; // Brisk punchy tone
+      u.rate = 1.05;
+    }
+    u.volume = 1.0;
+    window.speechSynthesis.speak(u);
+  } catch(e) {}
+}
+
+function sayMaheshStyle(text) {
+  speakCelebrity("custom", { text });
+}
+
+// Voice coach button events
+if ($("voice-coach-chips")) {
+  $("voice-coach-chips").onclick = e => {
+    const btn = e.target.closest("[data-coach]");
+    if (!btn) return;
+    setVoiceCoach(btn.dataset.coach);
+    speakCelebrity("test");
+  };
+}
+if ($("btn-test-prabhas-voice")) {
+  $("btn-test-prabhas-voice").onclick = () => {
+    setVoiceCoach("prabhas");
+    speakCelebrity("test_prabhas");
+  };
+}
+if ($("btn-test-mahesh-voice")) {
+  $("btn-test-mahesh-voice").onclick = () => {
+    setVoiceCoach("mahesh");
+    speakCelebrity("test_mahesh");
+  };
+}
+
+// ==========================================================
+// INTERACTIVE PIGGY BANK AUDIO & ANIMATIONS
+// ==========================================================
+function playPiggyOink() {
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = "sine";
+    const t = c.currentTime;
+    o.frequency.setValueAtTime(520, t);
+    o.frequency.exponentialRampToValueAtTime(880, t + 0.08);
+    o.frequency.exponentialRampToValueAtTime(650, t + 0.2);
+    g.gain.setValueAtTime(0.2, t);
+    g.gain.exponentialRampToValueAtTime(0.01, t + 0.22);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(t);
+    o.stop(t + 0.25);
+  } catch(e) {}
+}
+
+function playCeramicSmashSound() {
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    // 1. Heavy bass impact thud
+    const osc = c.createOscillator();
+    const gOsc = c.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(140, c.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(40, c.currentTime + 0.4);
+    gOsc.gain.setValueAtTime(0.4, c.currentTime);
+    gOsc.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.45);
+    osc.connect(gOsc);
+    gOsc.connect(c.destination);
+    osc.start();
+    osc.stop(c.currentTime + 0.5);
+
+    // 2. High glass/ceramic crash frequencies
+    [1800, 2400, 3100, 4200].forEach((freq, idx) => {
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(freq, c.currentTime + idx * 0.03);
+      g.gain.setValueAtTime(0.18, c.currentTime + idx * 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.35);
+      o.connect(g);
+      g.connect(c.destination);
+      o.start(c.currentTime + idx * 0.03);
+      o.stop(c.currentTime + 0.4);
+    });
+  } catch(e) {}
+}
+
+let isPiggyBroken = false;
+
+function renderPiggyBank(g, totalAmt) {
+  const wrapper = $("piggy-wrapper");
+  const fillRect = $("piggy-fill-rect");
+  const statusBadge = $("piggy-status-badge");
+  const mainBody = $("piggy-main-body");
+  const breakSection = $("break-piggy-section");
+  const cracks = $("piggy-cracks");
+
+  if (!wrapper || !g) return;
+  const target = g.target || 1;
+  const pct = Math.min(100, Math.max(0, (totalAmt / target) * 100));
+
+  // Dynamic belly fill height (0 to 60px)
+  const maxFillHeight = 60;
+  const currentHeight = (pct / 100) * maxFillHeight;
+  if (fillRect) {
+    fillRect.setAttribute("y", String(110 - currentHeight));
+    fillRect.setAttribute("height", String(currentHeight));
+  }
+
+  if (statusBadge) {
+    statusBadge.textContent = pct.toFixed(0) + "% Full";
+    statusBadge.classList.toggle("full", pct >= 100);
+  }
+
+  // Golden glowing body when 100% full
+  if (mainBody) {
+    if (pct >= 100 && !isPiggyBroken) {
+      mainBody.setAttribute("fill", "url(#piggyGoldGrad)");
+      mainBody.setAttribute("stroke", "#fde047");
+    } else {
+      mainBody.setAttribute("fill", "url(#piggyGrad)");
+      mainBody.setAttribute("stroke", "#fbcfe8");
+    }
+  }
+
+  // Show break button when 100% reached or if broken state
+  if (breakSection) {
+    breakSection.style.display = (pct >= 100 && !isPiggyBroken) ? "block" : "none";
+  }
+
+  if (cracks) {
+    cracks.style.display = isPiggyBroken ? "block" : "none";
+  }
+}
+
+function breakPiggyBankCeremony() {
+  const wrapper = $("piggy-wrapper");
+  const cracks = $("piggy-cracks");
+  const g = G();
+  const totalAmt = tot(g);
+
+  if (wrapper) {
+    wrapper.classList.add("smashing");
+    try { navigator.vibrate && navigator.vibrate([100, 60, 250, 100, 400]); } catch(e) {}
+    
+    setTimeout(() => {
+      wrapper.classList.remove("smashing");
+      wrapper.classList.add("broken");
+      isPiggyBroken = true;
+      if (cracks) cracks.style.display = "block";
+      playCeramicSmashSound();
+      chime();
+      rain(["🪙", "💰", "💎", "✨", "🎉", "👑", "💵"], 80);
+
+      // Open Victory Modal
+      setTimeout(() => {
+        const modal = $("break-piggy-modal");
+        const amtEl = $("break-modal-amt");
+        const dlgEl = $("break-modal-dialogue");
+        if (amtEl) amtEl.textContent = f(totalAmt);
+        
+        const uObj = users()[U] || {};
+        const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+        if (dlgEl) {
+          if (curVoiceCoach === "prabhas") {
+            dlgEl.textContent = `"Darling ${uName}! Record baddhalu kottav darling... Goal ${g.name} target motham reach ayindi! Pandaga chesko darling!"`;
+          } else {
+            dlgEl.textContent = `"Mind blowing ${uName}! Goal ${g.name} target complete chesav... Super achievement!"`;
+          }
+        }
+        if (modal) modal.classList.add("on");
+        speakCelebrity("goal_complete", { amt: totalAmt, goalName: g.name });
+      }, 500);
+    }, 400);
+  }
+}
+
+function restorePiggyBank() {
+  const wrapper = $("piggy-wrapper");
+  const cracks = $("piggy-cracks");
+  isPiggyBroken = false;
+  if (wrapper) wrapper.classList.remove("broken");
+  if (cracks) cracks.style.display = "none";
+  const modal = $("break-piggy-modal");
+  if (modal) modal.classList.remove("on");
+  render();
+}
+
+// Piggy wrapper click: Jiggle & Oink
+if ($("piggy-wrapper")) {
+  $("piggy-wrapper").onclick = () => {
+    const wrapper = $("piggy-wrapper");
+    if (!wrapper) return;
+    wrapper.classList.remove("jiggle");
+    void wrapper.offsetWidth;
+    wrapper.classList.add("jiggle");
+    playPiggyOink();
+    rain(["🪙", "✨"], 4);
+  };
+}
+
+// Break button clicks
+if ($("btn-break-piggy")) {
+  $("btn-break-piggy").onclick = breakPiggyBankCeremony;
+}
+if ($("btn-demo-smash")) {
+  $("btn-demo-smash").onclick = (e) => {
+    e.stopPropagation();
+    breakPiggyBankCeremony();
+  };
+}
+if ($("btn-reglue-piggy")) {
+  $("btn-reglue-piggy").onclick = restorePiggyBank;
+}
+if ($("btn-close-break-modal")) {
+  $("btn-close-break-modal").onclick = () => {
+    const modal = $("break-piggy-modal");
+    if (modal) modal.classList.remove("on");
+  };
+}
+
+try{updateVoiceCoachUI();}catch(e){}
 runSplashScreen(true);
 };
 
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.3.0";
+const CURRENT_APP_VERSION = "2.4.0";
 
 function showUpdateToast() {
   const toast = $("update-toast");
@@ -2696,602 +3257,25 @@ $("btn-check-ver").onclick = async () => {
 
 
 // ==========================================================
-// DAILY ROUTINE, 4:30 AM WAKEUP & WORKOUT ENGINE
-// ==========================================================
-function getHabitState() {
-  const k = "rsb_habits_" + (U || "default");
-  let data = null;
-  try { data = JSON.parse(localStorage.getItem(k)); } catch(e) {}
-  if (!data) {
-    data = {
-      wakeupTime: "04:30",
-      alarmEnabled: true,
-      lastAlarmDate: "",
-      wakeupLog: {},
-      wakeupStreak: 0,
-      workoutLog: {},
-      workoutStreak: 0,
-      customWorkouts: [],
-      waterLog: {},
-      mindLog: {}
-    };
-  }
-  if (!data.wakeupLog) data.wakeupLog = {};
-  if (!data.workoutLog) data.workoutLog = {};
-  if (!data.waterLog) data.waterLog = {};
-  if (!data.mindLog) data.mindLog = {};
-  if (!data.customWorkouts) data.customWorkouts = [];
-  return data;
-}
-
-function saveHabitState(h) {
-  const k = "rsb_habits_" + (U || "default");
-  try { localStorage.setItem(k, JSON.stringify(h)); } catch(e) {}
-}
-
-const DEFAULT_WORKOUTS = [
-  { id: "w1", name: "Pushups", reps: "3 sets × 15 reps", cat: "all" },
-  { id: "w2", name: "Bodyweight Squats", reps: "3 sets × 20 reps", cat: "all" },
-  { id: "w3", name: "Plank Hold", reps: "3 sets × 45 sec", cat: "abs" },
-  { id: "w4", name: "Bicycle Crunches", reps: "3 sets × 20 reps", cat: "abs" },
-  { id: "w5", name: "Jumping Jacks", reps: "3 sets × 30 reps", cat: "cardio" },
-  { id: "w6", name: "High Knees", reps: "3 sets × 40 reps", cat: "cardio" },
-  { id: "w7", name: "Surya Namaskar & Yoga", reps: "10 mins morning flow", cat: "yoga" },
-  { id: "w8", name: "Cooldown Stretching", reps: "5 mins full body", cat: "yoga" }
-];
-
-let curWorkoutCat = "all";
-let workoutTimerInterval = null;
-let workoutTimerSeconds = 45;
-let workoutTimerRemaining = 45;
-let workoutTimerRunning = false;
-let breatheInterval = null;
-
-function playWakeupAlarmSound() {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [440, 554.37, 659.25, 880, 1108.73, 1318.5];
-    notes.forEach((freq, idx) => {
-      const o = c.createOscillator();
-      const g = c.createGain();
-      o.type = "sine";
-      o.frequency.value = freq;
-      const t = c.currentTime + (idx * 0.14);
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.25, t + 0.03);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-      o.connect(g);
-      g.connect(c.destination);
-      o.start(t);
-      o.stop(t + 0.4);
-    });
-  } catch(e) {}
-}
-
-function playTimerBeep(isFinal) {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    const o = c.createOscillator();
-    const g = c.createGain();
-    o.type = isFinal ? "square" : "sine";
-    o.frequency.value = isFinal ? 1200 : 800;
-    const t = c.currentTime;
-    g.gain.setValueAtTime(0.2, t);
-    g.gain.exponentialRampToValueAtTime(0.01, t + (isFinal ? 0.45 : 0.15));
-    o.connect(g);
-    g.connect(c.destination);
-    o.start(t);
-    o.stop(t + (isFinal ? 0.5 : 0.2));
-  } catch(e) {}
-}
-
-function checkWakeupReminderAlarm() {
-  const hState = getHabitState();
-  if (!hState.alarmEnabled) return;
-  const now = new Date();
-  const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-  const target = hState.wakeupTime || "04:30";
-  if (curTime === target && hState.lastAlarmDate !== TD) {
-    hState.lastAlarmDate = TD;
-    saveHabitState(hState);
-    playWakeupAlarmSound();
-    if ("Notification" in window && Notification.permission === "granted") {
-      try {
-        new Notification("⏰ 4:30 AM Wakeup Reminder!", {
-          body: "4:30 AM అయింది! లేచి మీ రోజును ఉత్సాహంగా ప్రారంభించండి!",
-          icon: "icon-192.png"
-        });
-      } catch(e) {}
-    }
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    sayMaheshStyle("Good morning " + uName + "! 4:30 AM ayindi, lechi rojuna shuru chey!");
-  }
-}
-
-function renderHabits() {
-  const h = getHabitState();
-  const todayWake = h.wakeupLog[TD];
-  const todayWork = h.workoutLog[TD] || { done: false, exDone: [] };
-  const todayWater = h.waterLog[TD] || 0;
-  const todayMind = h.mindLog[TD] || { meditation: false, reading: false, healthyFood: false };
-
-  // 1. Overall Score
-  let doneCount = 0;
-  if (todayWake && todayWake.checkedIn) doneCount++;
-  if (todayWork.done) doneCount++;
-  if (todayWater >= 8) doneCount++;
-  if (todayMind.meditation || todayMind.reading) doneCount++;
-  const scorePct = Math.round((doneCount / 4) * 100);
-  
-  if ($("habits-score-pct")) $("habits-score-pct").textContent = scorePct + "%";
-  if ($("habits-score-bar")) $("habits-score-bar").style.width = scorePct + "%";
-  if ($("habits-score-text")) $("habits-score-text").textContent = doneCount + " of 4 habits done";
-  if ($("habits-today-date")) $("habits-today-date").textContent = "Today · " + TD;
-
-  // Home Quick Widget Updates
-  if ($("home-wakeup-st")) {
-    if (todayWake && todayWake.checkedIn) {
-      $("home-wakeup-st").textContent = "✓ " + (todayWake.time || "Done");
-      $("home-wakeup-st").style.color = "#10b981";
-    } else {
-      $("home-wakeup-st").textContent = "Check-in";
-      $("home-wakeup-st").style.color = "#fbbf24";
-    }
-  }
-  if ($("home-workout-st")) {
-    const exCount = (todayWork.exDone || []).length;
-    $("home-workout-st").textContent = todayWork.done ? "✓ Complete" : (exCount + "/5 Done");
-    $("home-workout-st").style.color = todayWork.done ? "#10b981" : "#34d399";
-  }
-  if ($("home-water-st")) {
-    $("home-water-st").textContent = todayWater + "/8 Glasses";
-    $("home-water-st").style.color = todayWater >= 8 ? "#10b981" : "#38bdf8";
-  }
-
-  // 2. Wakeup Card
-  if ($("wk-time-input")) $("wk-time-input").value = h.wakeupTime || "04:30";
-  if ($("btn-toggle-alarm")) {
-    $("btn-toggle-alarm").textContent = h.alarmEnabled ? "🔔 Alarm: ON" : "🔕 Alarm: OFF";
-    $("btn-toggle-alarm").style.borderColor = h.alarmEnabled ? "#f59e0b" : "var(--bd)";
-  }
-  if ($("wk-streak-badge")) $("wk-streak-badge").textContent = "🔥 " + (h.wakeupStreak || 0) + " Days";
-
-  const banner = $("wk-checkin-banner");
-  const msg = $("wk-checkin-msg");
-  const btnWake = $("btn-wakeup-checkin");
-  if (todayWake && todayWake.checkedIn) {
-    if (msg) msg.innerHTML = "🎉 Today Checked in at <b>" + todayWake.time + "</b>! " + (todayWake.onTime ? "On Time! 🏆" : "Awake &amp; Active! ⭐");
-    if (btnWake) {
-      btnWake.textContent = "✓ Woke Up Checked In";
-      btnWake.style.background = "#059669";
-      btnWake.disabled = true;
-    }
-  } else {
-    if (msg) msg.textContent = "🌅 4:30 AM సమయానికి లేచి check-in అవ్వండి!";
-    if (btnWake) {
-      btnWake.textContent = "🌅 I Woke Up! (4:30 AM Check-In)";
-      btnWake.style.background = "linear-gradient(135deg,#f59e0b,#d97706)";
-      btnWake.disabled = false;
-    }
-  }
-
-  // Last 7 days wakeup history dots
-  const dotsContainer = $("wk-history-dots");
-  if (dotsContainer) {
-    const daysArr = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(TD + "T00:00:00");
-      d.setDate(d.getDate() - i);
-      daysArr.push(iso(d));
-    }
-    dotsContainer.innerHTML = daysArr.map(dStr => {
-      const entry = h.wakeupLog[dStr];
-      const dayName = new Date(dStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "narrow" });
-      if (entry && entry.checkedIn) {
-        return `<div class="wk-dot ontime" title="${dStr}: Woke up at ${entry.time}"><b>${dayName}</b>✓</div>`;
-      }
-      return `<div class="wk-dot" title="${dStr}: No record"><b>${dayName}</b>·</div>`;
-    }).join("");
-  }
-
-  // 3. Workout Card
-  if ($("wo-streak-badge")) $("wo-streak-badge").textContent = "💪 " + (h.workoutStreak || 0) + " Days";
-  const allExercises = [...DEFAULT_WORKOUTS, ...(h.customWorkouts || [])];
-  const filtered = curWorkoutCat === "all" ? allExercises : allExercises.filter(x => x.cat === curWorkoutCat || x.cat === "all");
-  const exDone = todayWork.exDone || [];
-
-  const exList = $("exercise-list");
-  if (exList) {
-    exList.innerHTML = filtered.map(ex => {
-      const isDone = exDone.includes(ex.id);
-      return `
-        <div class="exercise-item ${isDone ? 'done' : ''}" data-eid="${ex.id}">
-          <div>
-            <b style="font-size:13px">${ex.name}</b>
-            <div class="hint" style="margin:2px 0 0;font-size:11px">${ex.reps}</div>
-          </div>
-          <div class="exercise-checkbox">${isDone ? '✓' : ''}</div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  const btnWo = $("btn-complete-workout");
-  if (btnWo) {
-    if (todayWork.done) {
-      btnWo.textContent = "✓ Today's Workout Completed! 💪";
-      btnWo.style.background = "#059669";
-    } else {
-      btnWo.textContent = "💪 Complete Today's Workout (" + exDone.length + "/" + filtered.length + " done)";
-      btnWo.style.background = "linear-gradient(135deg,#10b981,#059669)";
-    }
-  }
-
-  // 4. Hydration Water Grid
-  if ($("water-stat-text")) $("water-stat-text").textContent = todayWater + " / 8 Glasses (" + (todayWater * 250) + " ml)";
-  if ($("water-bar")) $("water-bar").style.width = Math.min(100, (todayWater / 8) * 100) + "%";
-  const wGrid = $("water-grid");
-  if (wGrid) {
-    let wHtml = "";
-    for (let i = 1; i <= 8; i++) {
-      const isFilled = i <= todayWater;
-      wHtml += `
-        <button class="water-glass-btn ${isFilled ? 'filled' : ''}" data-glass="${i}">
-          <span class="glass-icon">${isFilled ? '💧' : '🥛'}</span>
-          <span>${i * 250}ml</span>
-        </button>
-      `;
-    }
-    wGrid.innerHTML = wHtml;
-  }
-
-  // 5. Mind & Health Checkboxes
-  if ($("chk-meditation")) $("chk-meditation").checked = !!todayMind.meditation;
-  if ($("chk-reading")) $("chk-reading").checked = !!todayMind.reading;
-  if ($("chk-healthy-food")) $("chk-healthy-food").checked = !!todayMind.healthyFood;
-}
-
-// Bind Event Handlers
-document.addEventListener("DOMContentLoaded", () => {
-  renderHabits();
-});
-
-// Wakeup Check-in Action
-if ($("btn-wakeup-checkin")) {
-  $("btn-wakeup-checkin").onclick = () => {
-    const h = getHabitState();
-    const now = new Date();
-    const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-    const target = h.wakeupTime || "04:30";
-    const onTime = curTime <= "05:00";
-    
-    if (!h.wakeupLog[TD]) {
-      h.wakeupStreak = (h.wakeupStreak || 0) + 1;
-    }
-    h.wakeupLog[TD] = { checkedIn: true, time: curTime, onTime: onTime };
-    saveHabitState(h);
-    renderHabits();
-    chime();
-    rain(["🌅", "☀️", "⏰", "⭐", "💪"], 25);
-    
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    if (onTime) {
-      sayMaheshStyle("Super " + uName + "! 4:30 AM ki lechavu... early morning discipline unte victory confirm!");
-    } else {
-      sayMaheshStyle("Good morning " + uName + "! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!");
-    }
-  };
-}
-
-// Quick Home Wakeup button
-if ($("home-quick-wakeup")) {
-  $("home-quick-wakeup").onclick = () => {
-    const h = getHabitState();
-    if (h.wakeupLog[TD] && h.wakeupLog[TD].checkedIn) {
-      document.querySelector('[data-target="view-habits"]').click();
-    } else {
-      if ($("btn-wakeup-checkin")) $("btn-wakeup-checkin").click();
-    }
-  };
-}
-
-// Wakeup Alarm Toggle & Test
-if ($("btn-toggle-alarm")) {
-  $("btn-toggle-alarm").onclick = () => {
-    const h = getHabitState();
-    h.alarmEnabled = !h.alarmEnabled;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("wk-time-input")) {
-  $("wk-time-input").onchange = e => {
-    const h = getHabitState();
-    h.wakeupTime = e.target.value;
-    saveHabitState(h);
-  };
-}
-if ($("btn-test-alarm")) {
-  $("btn-test-alarm").onclick = () => {
-    playWakeupAlarmSound();
-  };
-}
-if ($("btn-req-notif")) {
-  $("btn-req-notif").onclick = async () => {
-    if ("Notification" in window) {
-      const res = await Notification.requestPermission();
-      if (res === "granted") {
-        alert("Notification permission granted! 4:30 AM కి మీకు reminder వస్తుంది.");
-      } else {
-        alert("Notification permission denied. Browser settings lo allow cheయండి.");
-      }
-    } else {
-      alert("Ee browser lo notifications support ledu.");
-    }
-  };
-}
-
-// Discipline to Savings Rules
-if ($("btn-reward-wakeup")) {
-  $("btn-reward-wakeup").onclick = () => {
-    addVoiceEntryDirect(10, "4:30 AM Wakeup Reward");
-  };
-}
-if ($("btn-penalty-wakeup")) {
-  $("btn-penalty-wakeup").onclick = () => {
-    addVoiceEntryDirect(10, "Missed 4:30 AM Wakeup Penalty");
-  };
-}
-
-// Workout Category Tabs
-if ($("wo-cats")) {
-  $("wo-cats").onclick = e => {
-    const btn = e.target.closest("[data-wcat]");
-    if (!btn) return;
-    $("wo-cats").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
-    btn.classList.add("on");
-    curWorkoutCat = btn.dataset.wcat;
-    renderHabits();
-  };
-}
-
-// Exercise Item Toggle
-if ($("exercise-list")) {
-  $("exercise-list").onclick = e => {
-    const item = e.target.closest(".exercise-item");
-    if (!item) return;
-    const eid = item.dataset.eid;
-    const h = getHabitState();
-    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
-    const exDone = h.workoutLog[TD].exDone || [];
-    const idx = exDone.indexOf(eid);
-    if (idx >= 0) {
-      exDone.splice(idx, 1);
-    } else {
-      exDone.push(eid);
-      beep();
-    }
-    h.workoutLog[TD].exDone = exDone;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-
-// Add Custom Exercise
-if ($("btn-add-exercise")) {
-  $("btn-add-exercise").onclick = () => {
-    const name = ($("custom-ex-name").value || "").trim();
-    const reps = ($("custom-ex-reps").value || "3 sets × 10").trim();
-    if (!name) return alert("Exercise name enter cheyandi.");
-    const h = getHabitState();
-    h.customWorkouts.push({
-      id: "cw_" + Date.now(),
-      name: name,
-      reps: reps,
-      cat: "all"
-    });
-    saveHabitState(h);
-    $("custom-ex-name").value = "";
-    $("custom-ex-reps").value = "";
-    renderHabits();
-  };
-}
-
-// Complete Workout Button
-if ($("btn-complete-workout")) {
-  $("btn-complete-workout").onclick = () => {
-    const h = getHabitState();
-    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
-    h.workoutLog[TD].done = true;
-    h.workoutStreak = (h.workoutStreak || 0) + 1;
-    saveHabitState(h);
-    renderHabits();
-    chime();
-    rain(["💪", "🏋️", "🔥", "⭐", "🏆"], 30);
-    
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    sayMaheshStyle("Keka " + uName + "! Home workout complete chesav... nee health e nee real wealth!");
-  };
-}
-if ($("btn-reward-workout")) {
-  $("btn-reward-workout").onclick = () => {
-    addVoiceEntryDirect(20, "Daily Workout Reward");
-  };
-}
-
-// Workout Interval Timer
-function updateTimerDisplay() {
-  const m = Math.floor(workoutTimerRemaining / 60);
-  const s = workoutTimerRemaining % 60;
-  if ($("timer-digits")) {
-    $("timer-digits").textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-  }
-}
-if ($("timer-presets")) {
-  $("timer-presets").onclick = e => {
-    const btn = e.target.closest("[data-sec]");
-    if (!btn) return;
-    $("timer-presets").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
-    btn.classList.add("on");
-    workoutTimerSeconds = parseInt(btn.dataset.sec, 10);
-    workoutTimerRemaining = workoutTimerSeconds;
-    if (workoutTimerRunning && workoutTimerInterval) {
-      clearInterval(workoutTimerInterval);
-      workoutTimerRunning = false;
-    }
-    if ($("timer-status")) $("timer-status").textContent = "Ready (" + workoutTimerSeconds + "s)";
-    updateTimerDisplay();
-  };
-}
-if ($("btn-timer-start")) {
-  $("btn-timer-start").onclick = () => {
-    if (workoutTimerRunning) return;
-    if (workoutTimerRemaining <= 0) workoutTimerRemaining = workoutTimerSeconds;
-    workoutTimerRunning = true;
-    if ($("timer-status")) $("timer-status").textContent = "Running... 🔥";
-    playTimerBeep(false);
-    
-    workoutTimerInterval = setInterval(() => {
-      workoutTimerRemaining--;
-      updateTimerDisplay();
-      if (workoutTimerRemaining <= 3 && workoutTimerRemaining > 0) {
-        playTimerBeep(false);
-      }
-      if (workoutTimerRemaining <= 0) {
-        clearInterval(workoutTimerInterval);
-        workoutTimerRunning = false;
-        if ($("timer-status")) $("timer-status").textContent = "Time Up! Rest Over 🔔";
-        playTimerBeep(true);
-        chime();
-      }
-    }, 1000);
-  };
-}
-if ($("btn-timer-pause")) {
-  $("btn-timer-pause").onclick = () => {
-    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-    workoutTimerRunning = false;
-    if ($("timer-status")) $("timer-status").textContent = "Paused";
-  };
-}
-if ($("btn-timer-reset")) {
-  $("btn-timer-reset").onclick = () => {
-    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-    workoutTimerRunning = false;
-    workoutTimerRemaining = workoutTimerSeconds;
-    if ($("timer-status")) $("timer-status").textContent = "Ready";
-    updateTimerDisplay();
-  };
-}
-
-// Hydration Water Glass Clicks
-if ($("water-grid")) {
-  $("water-grid").onclick = e => {
-    const btn = e.target.closest("[data-glass]");
-    if (!btn) return;
-    const gNum = parseInt(btn.dataset.glass, 10);
-    const h = getHabitState();
-    h.waterLog[TD] = gNum;
-    saveHabitState(h);
-    beep();
-    renderHabits();
-    
-    if (gNum === 8) {
-      chime();
-      rain(["💧", "🌊", "🥤", "⭐", "🏆"], 25);
-      const uObj = users()[U] || {};
-      const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-      sayMaheshStyle("Good job " + uName + "! Roju 2 liters water tagavu, hydration is power!");
-    }
-  };
-}
-if ($("home-quick-water")) {
-  $("home-quick-water").onclick = () => {
-    const h = getHabitState();
-    const cur = h.waterLog[TD] || 0;
-    h.waterLog[TD] = Math.min(8, cur + 1);
-    saveHabitState(h);
-    beep();
-    renderHabits();
-  };
-}
-
-// Meditation & Deep Breathing Visual Guide
-if ($("btn-toggle-breathe-guide")) {
-  $("btn-toggle-breathe-guide").onclick = () => {
-    const box = $("breathe-box");
-    if (!box) return;
-    const isShowing = box.style.display !== "none";
-    if (isShowing) {
-      box.style.display = "none";
-      if (breatheInterval) clearInterval(breatheInterval);
-    } else {
-      box.style.display = "block";
-      const circle = $("breathe-circle");
-      const instr = $("breathe-instruction");
-      let phase = 0;
-      const phases = [
-        { text: "Inhale...", sub: "Breathe in deeply through nose (4s)" },
-        { text: "Hold...", sub: "Hold your breath gently (4s)" },
-        { text: "Exhale...", sub: "Exhale slowly through mouth (4s)" }
-      ];
-      if (breatheInterval) clearInterval(breatheInterval);
-      breatheInterval = setInterval(() => {
-        phase = (phase + 1) % phases.length;
-        if (circle) circle.textContent = phases[phase].text;
-        if (instr) instr.textContent = phases[phase].sub;
-      }, 4000);
-    }
-  };
-}
-
-// Mind Checkboxes
-if ($("chk-meditation")) {
-  $("chk-meditation").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].meditation = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("chk-reading")) {
-  $("chk-reading").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].reading = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("chk-healthy-food")) {
-  $("chk-healthy-food").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].healthyFood = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-
-// Navigation Jump from Home to Routine
-if ($("btn-goto-routine")) {
-  $("btn-goto-routine").onclick = () => {
-    const navBtn = document.querySelector('[data-target="view-habits"]');
-    if (navBtn) navBtn.click();
-  };
-}
-if ($("home-quick-workout")) {
-  $("home-quick-workout").onclick = () => {
-    const navBtn = document.querySelector('[data-target="view-habits"]');
-    if (navBtn) navBtn.click();
-  };
-}
-
 runSplashScreen(true);
 </script>
+
+<!-- Break Piggy Bank Celebration Victory Modal -->
+<div id="break-piggy-modal" class="break-modal">
+  <div class="break-modal-box">
+    <div style="font-size:52px;animation:trophyBounce 1s ease infinite alternate">🏆</div>
+    <h2 style="margin:6px 0;font-size:22px;color:#fbbf24">PIGGY BANK BROKEN! 💥</h2>
+    <div class="hint" style="color:#93c5fd;font-size:13px">లక్ష్యం పూర్తయింది! మీ పొదుపు మొత్తం:</div>
+    <div style="font-size:38px;font-weight:800;color:#10b981;margin:10px 0" id="break-modal-amt">₹5,000</div>
+    <div id="break-modal-dialogue" style="font-size:13px;color:#fde047;background:rgba(245,158,11,0.18);padding:10px 14px;border-radius:12px;border:1.5px solid #f59e0b;margin:12px 0;line-height:1.5;text-align:center">
+      "Darling! Record baddhalu kottav darling... Goal target motham reach ayindi! Pandaga chesko!"
+    </div>
+    <div class="row" style="gap:8px">
+      <button id="btn-reglue-piggy" style="flex:1;background:var(--cell);color:var(--tx);font-size:12px;padding:10px;border-radius:10px;border:1px solid var(--bd);cursor:pointer">🔨 Re-glue (అతుకు పెట్టు)</button>
+      <button id="btn-close-break-modal" style="flex:1;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:13px;font-weight:700;padding:10px;border-radius:10px;border:0;cursor:pointer">Super Darling! 🎉</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
