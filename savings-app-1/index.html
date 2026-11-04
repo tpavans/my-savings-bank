@@ -1591,7 +1591,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   <div class="card" id="version-card" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px">
     <div>
       <b style="font-size:14px">App Version</b>
-      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.5.0 · Up to date ✅</div>
+      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.6.0 · Up to date ✅</div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button id="btn-settings-update" style="display:none;width:auto;margin:0;padding:7px 15px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:12px;font-weight:700;border:0;border-radius:10px;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer">Update Now ⚡</button>
@@ -1753,9 +1753,38 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 
 
 // ==========================================================
-// CELEBRITY VOICE COACH ENGINE (PRABHAS & MAHESH BABU)
+// REAL PRABHAS & MAHESH CELEBRITY AUDIO ENGINE (Authentic MP3s)
 // ==========================================================
 let curVoiceCoach = localStorage.getItem("rsb_voice_coach") || "prabhas";
+
+const CELEBRITY_AUDIO_MAP = {
+  prabhas: {
+    intro: "audio/prabhas_intro.mp3",
+    test_prabhas: "audio/prabhas_intro.mp3",
+    test: "audio/prabhas_intro.mp3",
+    add_money: "audio/prabhas_add_money.mp3",
+    goal_complete: "audio/prabhas_goal_complete.mp3",
+    break_piggy: "audio/prabhas_break_piggy.mp3",
+    wakeup_ontime: "audio/prabhas_wakeup.mp3",
+    wakeup_late: "audio/prabhas_wakeup.mp3",
+    workout_complete: "audio/prabhas_workout.mp3",
+    water_complete: "audio/prabhas_water.mp3"
+  },
+  mahesh: {
+    intro: "audio/mahesh_intro.mp3",
+    test_mahesh: "audio/mahesh_intro.mp3",
+    test: "audio/mahesh_intro.mp3",
+    add_money: "audio/mahesh_add_money.mp3",
+    goal_complete: "audio/mahesh_goal_complete.mp3",
+    break_piggy: "audio/mahesh_break_piggy.mp3",
+    wakeup_ontime: "audio/mahesh_wakeup.mp3",
+    wakeup_late: "audio/mahesh_wakeup.mp3",
+    workout_complete: "audio/mahesh_workout.mp3",
+    water_complete: "audio/mahesh_water.mp3"
+  }
+};
+
+let activeCelebrityAudio = null;
 
 function setVoiceCoach(coach) {
   curVoiceCoach = coach;
@@ -1765,7 +1794,7 @@ function setVoiceCoach(coach) {
 
 function updateVoiceCoachUI() {
   if ($("cur-voice-badge")) {
-    $("cur-voice-badge").textContent = curVoiceCoach === "prabhas" ? "👑 Prabhas" : "⭐ Mahesh Babu";
+    $("cur-voice-badge").textContent = curVoiceCoach === "prabhas" ? "👑 Prabhas (Real)" : "⭐ Mahesh Babu (Real)";
   }
   const chips = $("voice-coach-chips");
   if (chips) {
@@ -1775,132 +1804,38 @@ function updateVoiceCoachUI() {
   }
 }
 
-// Mobile Audio & Speech Unlocker
-let audioUnlocked = false;
-function unlockSpeechAndAudio() {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
-  if (window.speechSynthesis) {
-    try {
-      window.speechSynthesis.resume();
-      const u = new SpeechSynthesisUtterance(" ");
-      u.volume = 0.01;
-      window.speechSynthesis.speak(u);
-    } catch(e) {}
-  }
-}
-window.addEventListener("touchstart", unlockSpeechAndAudio, { passive: true, once: true });
-window.addEventListener("click", unlockSpeechAndAudio, { once: true });
-
 function speakCelebrity(type, data = {}) {
-  if (!window._snd || !window.speechSynthesis) return;
+  if (!window._snd) return;
+  const coach = curVoiceCoach || "prabhas";
+  const map = CELEBRITY_AUDIO_MAP[coach] || CELEBRITY_AUDIO_MAP.prabhas;
+  const audioSrc = map[type] || map.add_money;
+
   try {
-    unlockSpeechAndAudio();
-    window.speechSynthesis.resume();
-    
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    const g = G() || { name: "Savings Goal" };
-    let text = "";
-    
-    if (curVoiceCoach === "prabhas") {
-      // Prabhas Rebel Star / Darling Style Dialogues
-      if (type === "add_money") {
-        text = `${data.amt || ""} rupees mee savings bank ki add ayindi darling! Mee goal ${data.goalName || g.name} kosam... Thaggedhe le darling ${uName}!`;
-      } else if (type === "goal_complete") {
-        text = `Darling ${uName}! Record baddhalu kottav darling... Goal ${data.goalName || g.name} target motham reach ayindi! Pandaga chesko darling!`;
-      } else if (type === "break_piggy") {
-        text = `Baddhalayindi darling! Piggy bank baddhalu kottav... Super discipline darling ${uName}!`;
-      } else if (type === "wakeup_ontime") {
-        text = `Super darling ${uName}! 4:30 AM ki lechavu... early morning lechinodu eppatiki odipodu darling!`;
-      } else if (type === "wakeup_late") {
-        text = `Good morning darling ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu darling!`;
-      } else if (type === "workout_complete") {
-        text = `Keka darling ${uName}! Home workout complete chesav... Fitness unte manalni evaru aapanu leru darling!`;
-      } else if (type === "water_complete") {
-        text = `Good job darling ${uName}! Roju 2 liters water tagavu, hydration is power darling!`;
-      } else if (type === "test_prabhas" || type === "test") {
-        text = `Darling ${uName}! Thaggedhe le darling... My Savings Bank lo ninnu evaru aapaleru!`;
-      } else if (type === "custom") {
-        text = data.text || "";
-      }
-    } else {
-      // Mahesh Babu Punch Style Dialogues
-      if (type === "add_money") {
-        text = `${data.amt || ""} rupees mee savings bank ki add ayindi, mee goal ${data.goalName || g.name} kosam... Super ${uName}!`;
-      } else if (type === "goal_complete") {
-        text = `Mind blowing ${uName}! Goal ${data.goalName || g.name} complete chesav... Success ante idhi!`;
-      } else if (type === "break_piggy") {
-        text = `Piggy bank smash chesav ${uName}! Nee target complete ayindi, super!`;
-      } else if (type === "wakeup_ontime") {
-        text = `Super ${uName}! 4:30 AM ki lechavu... early morning discipline unte victory confirm!`;
-      } else if (type === "wakeup_late") {
-        text = `Good morning ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!`;
-      } else if (type === "workout_complete") {
-        text = `Keka ${uName}! Home workout complete chesav... nee health e nee real wealth!`;
-      } else if (type === "water_complete") {
-        text = `Good job ${uName}! Roju 2 liters water tagavu, hydration is power!`;
-      } else if (type === "test_mahesh" || type === "test") {
-        text = `Hey ${uName}! Okkasari commit aithe naa maata nene vinanu... Save smart!`;
-      } else if (type === "custom") {
-        text = data.text || "";
-      }
+    if (activeCelebrityAudio) {
+      activeCelebrityAudio.pause();
+      activeCelebrityAudio.currentTime = 0;
     }
-
-    if (!text) return;
-
-    const u = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices() || [];
-    
-    // Voice selection: Prefer Telugu, then Indian English male, then Indian
-    const teVoice = voices.find(v => v.lang === "te-IN" || v.lang === "te_IN" || v.lang.toLowerCase().startsWith("te"));
-    const inVoice = voices.find(v => v.lang === "en-IN" || (v.lang.includes("IN") && v.name.toLowerCase().includes("male")));
-    const generalInVoice = voices.find(v => v.lang.includes("IN") || v.name.toLowerCase().includes("india"));
-    
-    if (teVoice) {
-      u.voice = teVoice;
-      u.lang = "te-IN";
-    } else if (inVoice) {
-      u.voice = inVoice;
-      u.lang = "en-IN";
-    } else if (generalInVoice) {
-      u.voice = generalInVoice;
-      u.lang = "en-IN";
-    } else {
-      u.lang = "en-IN";
+    const audio = new Audio(audioSrc);
+    activeCelebrityAudio = audio;
+    audio.volume = 1.0;
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(err => {
+        console.log("Audio play error, falling back to chime:", err);
+        chime();
+      });
     }
-
-    if (curVoiceCoach === "prabhas") {
-      u.pitch = 0.82; // Deep baritone tone
-      u.rate = 0.98;
-    } else {
-      u.pitch = 0.95; // Punchy crisp tone
-      u.rate = 1.05;
-    }
-    u.volume = 1.0;
-
-    // Fix Android Chrome bug: Cancel and delay 50ms before speak
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-    setTimeout(() => {
-      try {
-        window.speechSynthesis.resume();
-        window.speechSynthesis.speak(u);
-      } catch (err) {
-        console.log("TTS Error:", err);
-      }
-    }, 50);
-  } catch (e) {
-    console.log("Speech Error:", e);
+  } catch(e) {
+    console.log("Audio trigger error:", e);
+    chime();
   }
 }
 
 function sayMaheshStyle(text) {
-  speakCelebrity("custom", { text });
+  speakCelebrity("add_money");
 }
 function say(text) {
-  speakCelebrity("custom", { text });
+  speakCelebrity("add_money");
 }
 
 // Voice coach event listeners
@@ -3159,7 +3094,7 @@ if ($("home-quick-workout")) {
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.5.0";
+const CURRENT_APP_VERSION = "2.6.0";
 
 function showUpdateToast() {
   const toast = $("update-toast");

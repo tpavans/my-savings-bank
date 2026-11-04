@@ -1,4 +1,4 @@
-const C = "savings-v15-fixed-voice";
+const C = "savings-v16-real-prabhas-voice";
 const A = [
   "./",
   "index.html",
@@ -9,7 +9,21 @@ const A = [
   "apple-touch-icon.png",
   "favicon.png",
   "favicon.ico",
-  "app-logo.png"
+  "app-logo.png",
+  "audio/prabhas_intro.mp3",
+  "audio/prabhas_add_money.mp3",
+  "audio/prabhas_goal_complete.mp3",
+  "audio/prabhas_break_piggy.mp3",
+  "audio/prabhas_wakeup.mp3",
+  "audio/prabhas_workout.mp3",
+  "audio/prabhas_water.mp3",
+  "audio/mahesh_intro.mp3",
+  "audio/mahesh_add_money.mp3",
+  "audio/mahesh_goal_complete.mp3",
+  "audio/mahesh_break_piggy.mp3",
+  "audio/mahesh_wakeup.mp3",
+  "audio/mahesh_workout.mp3",
+  "audio/mahesh_water.mp3"
 ];
 
 self.addEventListener("install", e => {
@@ -45,7 +59,7 @@ self.addEventListener("fetch", e => {
     );
     return;
   }
-  // Static assets: Cache-First
+  // Audio & Static Assets: Cache-First
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
   );
