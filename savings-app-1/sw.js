@@ -1,4 +1,4 @@
-const C = "savings-v14-prabhas-piggy";
+const C = "savings-v15-fixed-voice";
 const A = [
   "./",
   "index.html",
@@ -30,6 +30,7 @@ self.addEventListener("message", e => {
 });
 
 self.addEventListener("fetch", e => {
+  // Navigation / HTML requests: Network-First so updates show immediately!
   if (e.request.mode === "navigate" || e.request.destination === "document" || e.request.url.endsWith(".html") || e.request.url.endsWith("/")) {
     e.respondWith(
       fetch(e.request)
@@ -44,6 +45,7 @@ self.addEventListener("fetch", e => {
     );
     return;
   }
+  // Static assets: Cache-First
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
   );

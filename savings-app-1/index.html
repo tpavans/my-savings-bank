@@ -1591,7 +1591,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
   <div class="card" id="version-card" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px">
     <div>
       <b style="font-size:14px">App Version</b>
-      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.4.0 · Up to date ✅</div>
+      <div class="hint" style="margin:2px 0 0" id="ver-status">v2.5.0 · Up to date ✅</div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button id="btn-settings-update" style="display:none;width:auto;margin:0;padding:7px 15px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:12px;font-weight:700;border:0;border-radius:10px;box-shadow:0 2px 8px rgba(16,185,129,0.35);cursor:pointer">Update Now ⚡</button>
@@ -1669,6 +1669,9 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 <div id="ok"><div class="tick">✓</div><div class="ttl">Payment Successful</div><div class="a" id="okamt"></div><div id="okmsg"></div><div class="hint" id="oktx" style="color:#fff;opacity:.85"></div><button id="okd">Done</button><div class="pig">🐷</div></div>
 
 <script>
+
+window._snd = localStorage.getItem("rsb_sound") !== "off";
+
 const $=id=>document.getElementById(id);
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
 let TD=iso(new Date());
@@ -1747,36 +1750,181 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 });
 
 // ==========================================================
-// MAHESH BABU STYLE VOICE COMMENTARY ENGINE
+
+
 // ==========================================================
-function sayMaheshStyle(text) {
-  if (!window._snd || !window.speechSynthesis) return;
-  try {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const inVoice = voices.find(v => v.lang === "te-IN") ||
-                    voices.find(v => v.lang.includes("IN") && (v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("ravi") || v.name.toLowerCase().includes("mohan") || v.name.toLowerCase().includes("prabhat"))) ||
-                    voices.find(v => v.lang.includes("IN")) ||
-                    voices.find(v => v.name.toLowerCase().includes("male")) ||
-                    null;
-    if (inVoice) u.voice = inVoice;
-    
-    u.pitch = 0.92;
-    u.rate = 1.04;
-    u.volume = 1.0;
-    
-    window.speechSynthesis.speak(u);
-  } catch (e) {
-    console.log("Speech error:", e);
+// CELEBRITY VOICE COACH ENGINE (PRABHAS & MAHESH BABU)
+// ==========================================================
+let curVoiceCoach = localStorage.getItem("rsb_voice_coach") || "prabhas";
+
+function setVoiceCoach(coach) {
+  curVoiceCoach = coach;
+  try { localStorage.setItem("rsb_voice_coach", coach); } catch(e) {}
+  updateVoiceCoachUI();
+}
+
+function updateVoiceCoachUI() {
+  if ($("cur-voice-badge")) {
+    $("cur-voice-badge").textContent = curVoiceCoach === "prabhas" ? "👑 Prabhas" : "⭐ Mahesh Babu";
+  }
+  const chips = $("voice-coach-chips");
+  if (chips) {
+    chips.querySelectorAll(".tab").forEach(b => {
+      b.classList.toggle("on", b.dataset.coach === curVoiceCoach);
+    });
   }
 }
 
-function say(t) {
-  sayMaheshStyle(t);
+// Mobile Audio & Speech Unlocker
+let audioUnlocked = false;
+function unlockSpeechAndAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  if (window.speechSynthesis) {
+    try {
+      window.speechSynthesis.resume();
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0.01;
+      window.speechSynthesis.speak(u);
+    } catch(e) {}
+  }
+}
+window.addEventListener("touchstart", unlockSpeechAndAudio, { passive: true, once: true });
+window.addEventListener("click", unlockSpeechAndAudio, { once: true });
+
+function speakCelebrity(type, data = {}) {
+  if (!window._snd || !window.speechSynthesis) return;
+  try {
+    unlockSpeechAndAudio();
+    window.speechSynthesis.resume();
+    
+    const uObj = users()[U] || {};
+    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+    const g = G() || { name: "Savings Goal" };
+    let text = "";
+    
+    if (curVoiceCoach === "prabhas") {
+      // Prabhas Rebel Star / Darling Style Dialogues
+      if (type === "add_money") {
+        text = `${data.amt || ""} rupees mee savings bank ki add ayindi darling! Mee goal ${data.goalName || g.name} kosam... Thaggedhe le darling ${uName}!`;
+      } else if (type === "goal_complete") {
+        text = `Darling ${uName}! Record baddhalu kottav darling... Goal ${data.goalName || g.name} target motham reach ayindi! Pandaga chesko darling!`;
+      } else if (type === "break_piggy") {
+        text = `Baddhalayindi darling! Piggy bank baddhalu kottav... Super discipline darling ${uName}!`;
+      } else if (type === "wakeup_ontime") {
+        text = `Super darling ${uName}! 4:30 AM ki lechavu... early morning lechinodu eppatiki odipodu darling!`;
+      } else if (type === "wakeup_late") {
+        text = `Good morning darling ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu darling!`;
+      } else if (type === "workout_complete") {
+        text = `Keka darling ${uName}! Home workout complete chesav... Fitness unte manalni evaru aapanu leru darling!`;
+      } else if (type === "water_complete") {
+        text = `Good job darling ${uName}! Roju 2 liters water tagavu, hydration is power darling!`;
+      } else if (type === "test_prabhas" || type === "test") {
+        text = `Darling ${uName}! Thaggedhe le darling... My Savings Bank lo ninnu evaru aapaleru!`;
+      } else if (type === "custom") {
+        text = data.text || "";
+      }
+    } else {
+      // Mahesh Babu Punch Style Dialogues
+      if (type === "add_money") {
+        text = `${data.amt || ""} rupees mee savings bank ki add ayindi, mee goal ${data.goalName || g.name} kosam... Super ${uName}!`;
+      } else if (type === "goal_complete") {
+        text = `Mind blowing ${uName}! Goal ${data.goalName || g.name} complete chesav... Success ante idhi!`;
+      } else if (type === "break_piggy") {
+        text = `Piggy bank smash chesav ${uName}! Nee target complete ayindi, super!`;
+      } else if (type === "wakeup_ontime") {
+        text = `Super ${uName}! 4:30 AM ki lechavu... early morning discipline unte victory confirm!`;
+      } else if (type === "wakeup_late") {
+        text = `Good morning ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!`;
+      } else if (type === "workout_complete") {
+        text = `Keka ${uName}! Home workout complete chesav... nee health e nee real wealth!`;
+      } else if (type === "water_complete") {
+        text = `Good job ${uName}! Roju 2 liters water tagavu, hydration is power!`;
+      } else if (type === "test_mahesh" || type === "test") {
+        text = `Hey ${uName}! Okkasari commit aithe naa maata nene vinanu... Save smart!`;
+      } else if (type === "custom") {
+        text = data.text || "";
+      }
+    }
+
+    if (!text) return;
+
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices() || [];
+    
+    // Voice selection: Prefer Telugu, then Indian English male, then Indian
+    const teVoice = voices.find(v => v.lang === "te-IN" || v.lang === "te_IN" || v.lang.toLowerCase().startsWith("te"));
+    const inVoice = voices.find(v => v.lang === "en-IN" || (v.lang.includes("IN") && v.name.toLowerCase().includes("male")));
+    const generalInVoice = voices.find(v => v.lang.includes("IN") || v.name.toLowerCase().includes("india"));
+    
+    if (teVoice) {
+      u.voice = teVoice;
+      u.lang = "te-IN";
+    } else if (inVoice) {
+      u.voice = inVoice;
+      u.lang = "en-IN";
+    } else if (generalInVoice) {
+      u.voice = generalInVoice;
+      u.lang = "en-IN";
+    } else {
+      u.lang = "en-IN";
+    }
+
+    if (curVoiceCoach === "prabhas") {
+      u.pitch = 0.82; // Deep baritone tone
+      u.rate = 0.98;
+    } else {
+      u.pitch = 0.95; // Punchy crisp tone
+      u.rate = 1.05;
+    }
+    u.volume = 1.0;
+
+    // Fix Android Chrome bug: Cancel and delay 50ms before speak
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+    }
+    setTimeout(() => {
+      try {
+        window.speechSynthesis.resume();
+        window.speechSynthesis.speak(u);
+      } catch (err) {
+        console.log("TTS Error:", err);
+      }
+    }, 50);
+  } catch (e) {
+    console.log("Speech Error:", e);
+  }
 }
 
-// ==========================================================
+function sayMaheshStyle(text) {
+  speakCelebrity("custom", { text });
+}
+function say(text) {
+  speakCelebrity("custom", { text });
+}
+
+// Voice coach event listeners
+if ($("voice-coach-chips")) {
+  $("voice-coach-chips").onclick = e => {
+    const btn = e.target.closest("[data-coach]");
+    if (!btn) return;
+    setVoiceCoach(btn.dataset.coach);
+    speakCelebrity("test");
+  };
+}
+if ($("btn-test-prabhas-voice")) {
+  $("btn-test-prabhas-voice").onclick = () => {
+    setVoiceCoach("prabhas");
+    speakCelebrity("test_prabhas");
+  };
+}
+if ($("btn-test-mahesh-voice")) {
+  $("btn-test-mahesh-voice").onclick = () => {
+    setVoiceCoach("mahesh");
+    speakCelebrity("test_mahesh");
+  };
+}
+
 // DIRECT AUTOMATIC VOICE ENTRY (Adds directly without keypad!)
 // ==========================================================
 function addVoiceEntryDirect(amt, spokenText) {
@@ -1819,7 +1967,7 @@ function addVoiceEntryDirect(amt, spokenText) {
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${amt} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
-  speakCelebrity("add_money", { amt: amt, goalName: g.name });
+  speakCelebrity("add_money", { amt: a, goalName: g.name });
 }
 
 function startVoiceEntry() {
@@ -1925,7 +2073,7 @@ $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
   const maheshDialogue = `${a} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
-  speakCelebrity("add_money", { amt: amt, goalName: g.name });
+  speakCelebrity("add_money", { amt: a, goalName: g.name });
 };
 
 $("okd").onclick=()=>$("ok").classList.remove("on");
@@ -2233,725 +2381,11 @@ $("splash-skip-btn").onclick = (e) => {
 $("splash-screen").onclick = () => {
   closeSplashScreen();
 };
+
 $("btn-replay-splash").onclick = () => {
-  
-// ==========================================================
-// DAILY ROUTINE, 4:30 AM WAKEUP & WORKOUT ENGINE
-// ==========================================================
-function getHabitState() {
-  const k = "rsb_habits_" + (U || "default");
-  let data = null;
-  try { data = JSON.parse(localStorage.getItem(k)); } catch(e) {}
-  if (!data) {
-    data = {
-      wakeupTime: "04:30",
-      alarmEnabled: true,
-      lastAlarmDate: "",
-      wakeupLog: {},
-      wakeupStreak: 0,
-      workoutLog: {},
-      workoutStreak: 0,
-      customWorkouts: [],
-      waterLog: {},
-      mindLog: {}
-    };
-  }
-  if (!data.wakeupLog) data.wakeupLog = {};
-  if (!data.workoutLog) data.workoutLog = {};
-  if (!data.waterLog) data.waterLog = {};
-  if (!data.mindLog) data.mindLog = {};
-  if (!data.customWorkouts) data.customWorkouts = [];
-  return data;
-}
+  runSplashScreen(true);
+};
 
-function saveHabitState(h) {
-  const k = "rsb_habits_" + (U || "default");
-  try { localStorage.setItem(k, JSON.stringify(h)); } catch(e) {}
-}
-
-const DEFAULT_WORKOUTS = [
-  { id: "w1", name: "Pushups", reps: "3 sets × 15 reps", cat: "all" },
-  { id: "w2", name: "Bodyweight Squats", reps: "3 sets × 20 reps", cat: "all" },
-  { id: "w3", name: "Plank Hold", reps: "3 sets × 45 sec", cat: "abs" },
-  { id: "w4", name: "Bicycle Crunches", reps: "3 sets × 20 reps", cat: "abs" },
-  { id: "w5", name: "Jumping Jacks", reps: "3 sets × 30 reps", cat: "cardio" },
-  { id: "w6", name: "High Knees", reps: "3 sets × 40 reps", cat: "cardio" },
-  { id: "w7", name: "Surya Namaskar & Yoga", reps: "10 mins morning flow", cat: "yoga" },
-  { id: "w8", name: "Cooldown Stretching", reps: "5 mins full body", cat: "yoga" }
-];
-
-let curWorkoutCat = "all";
-let workoutTimerInterval = null;
-let workoutTimerSeconds = 45;
-let workoutTimerRemaining = 45;
-let workoutTimerRunning = false;
-let breatheInterval = null;
-
-function playWakeupAlarmSound() {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [440, 554.37, 659.25, 880, 1108.73, 1318.5];
-    notes.forEach((freq, idx) => {
-      const o = c.createOscillator();
-      const g = c.createGain();
-      o.type = "sine";
-      o.frequency.value = freq;
-      const t = c.currentTime + (idx * 0.14);
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.25, t + 0.03);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-      o.connect(g);
-      g.connect(c.destination);
-      o.start(t);
-      o.stop(t + 0.4);
-    });
-  } catch(e) {}
-}
-
-function playTimerBeep(isFinal) {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    const o = c.createOscillator();
-    const g = c.createGain();
-    o.type = isFinal ? "square" : "sine";
-    o.frequency.value = isFinal ? 1200 : 800;
-    const t = c.currentTime;
-    g.gain.setValueAtTime(0.2, t);
-    g.gain.exponentialRampToValueAtTime(0.01, t + (isFinal ? 0.45 : 0.15));
-    o.connect(g);
-    g.connect(c.destination);
-    o.start(t);
-    o.stop(t + (isFinal ? 0.5 : 0.2));
-  } catch(e) {}
-}
-
-function checkWakeupReminderAlarm() {
-  const hState = getHabitState();
-  if (!hState.alarmEnabled) return;
-  const now = new Date();
-  const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-  const target = hState.wakeupTime || "04:30";
-  if (curTime === target && hState.lastAlarmDate !== TD) {
-    hState.lastAlarmDate = TD;
-    saveHabitState(hState);
-    playWakeupAlarmSound();
-    if ("Notification" in window && Notification.permission === "granted") {
-      try {
-        new Notification("⏰ 4:30 AM Wakeup Reminder!", {
-          body: "4:30 AM అయింది! లేచి మీ రోజును ఉత్సాహంగా ప్రారంభించండి!",
-          icon: "icon-192.png"
-        });
-      } catch(e) {}
-    }
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    sayMaheshStyle("Good morning " + uName + "! 4:30 AM ayindi, lechi rojuna shuru chey!");
-  }
-}
-
-function renderHabits() {
-  const h = getHabitState();
-  const todayWake = h.wakeupLog[TD];
-  const todayWork = h.workoutLog[TD] || { done: false, exDone: [] };
-  const todayWater = h.waterLog[TD] || 0;
-  const todayMind = h.mindLog[TD] || { meditation: false, reading: false, healthyFood: false };
-
-  // 1. Overall Score
-  let doneCount = 0;
-  if (todayWake && todayWake.checkedIn) doneCount++;
-  if (todayWork.done) doneCount++;
-  if (todayWater >= 8) doneCount++;
-  if (todayMind.meditation || todayMind.reading) doneCount++;
-  const scorePct = Math.round((doneCount / 4) * 100);
-  
-  if ($("habits-score-pct")) $("habits-score-pct").textContent = scorePct + "%";
-  if ($("habits-score-bar")) $("habits-score-bar").style.width = scorePct + "%";
-  if ($("habits-score-text")) $("habits-score-text").textContent = doneCount + " of 4 habits done";
-  if ($("habits-today-date")) $("habits-today-date").textContent = "Today · " + TD;
-
-  // Home Quick Widget Updates
-  if ($("home-wakeup-st")) {
-    if (todayWake && todayWake.checkedIn) {
-      $("home-wakeup-st").textContent = "✓ " + (todayWake.time || "Done");
-      $("home-wakeup-st").style.color = "#10b981";
-    } else {
-      $("home-wakeup-st").textContent = "Check-in";
-      $("home-wakeup-st").style.color = "#fbbf24";
-    }
-  }
-  if ($("home-workout-st")) {
-    const exCount = (todayWork.exDone || []).length;
-    $("home-workout-st").textContent = todayWork.done ? "✓ Complete" : (exCount + "/5 Done");
-    $("home-workout-st").style.color = todayWork.done ? "#10b981" : "#34d399";
-  }
-  if ($("home-water-st")) {
-    $("home-water-st").textContent = todayWater + "/8 Glasses";
-    $("home-water-st").style.color = todayWater >= 8 ? "#10b981" : "#38bdf8";
-  }
-
-  // 2. Wakeup Card
-  if ($("wk-time-input")) $("wk-time-input").value = h.wakeupTime || "04:30";
-  if ($("btn-toggle-alarm")) {
-    $("btn-toggle-alarm").textContent = h.alarmEnabled ? "🔔 Alarm: ON" : "🔕 Alarm: OFF";
-    $("btn-toggle-alarm").style.borderColor = h.alarmEnabled ? "#f59e0b" : "var(--bd)";
-  }
-  if ($("wk-streak-badge")) $("wk-streak-badge").textContent = "🔥 " + (h.wakeupStreak || 0) + " Days";
-
-  const banner = $("wk-checkin-banner");
-  const msg = $("wk-checkin-msg");
-  const btnWake = $("btn-wakeup-checkin");
-  if (todayWake && todayWake.checkedIn) {
-    if (msg) msg.innerHTML = "🎉 Today Checked in at <b>" + todayWake.time + "</b>! " + (todayWake.onTime ? "On Time! 🏆" : "Awake &amp; Active! ⭐");
-    if (btnWake) {
-      btnWake.textContent = "✓ Woke Up Checked In";
-      btnWake.style.background = "#059669";
-      btnWake.disabled = true;
-    }
-  } else {
-    if (msg) msg.textContent = "🌅 4:30 AM సమయానికి లేచి check-in అవ్వండి!";
-    if (btnWake) {
-      btnWake.textContent = "🌅 I Woke Up! (4:30 AM Check-In)";
-      btnWake.style.background = "linear-gradient(135deg,#f59e0b,#d97706)";
-      btnWake.disabled = false;
-    }
-  }
-
-  // Last 7 days wakeup history dots
-  const dotsContainer = $("wk-history-dots");
-  if (dotsContainer) {
-    const daysArr = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(TD + "T00:00:00");
-      d.setDate(d.getDate() - i);
-      daysArr.push(iso(d));
-    }
-    dotsContainer.innerHTML = daysArr.map(dStr => {
-      const entry = h.wakeupLog[dStr];
-      const dayName = new Date(dStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "narrow" });
-      if (entry && entry.checkedIn) {
-        return `<div class="wk-dot ontime" title="${dStr}: Woke up at ${entry.time}"><b>${dayName}</b>✓</div>`;
-      }
-      return `<div class="wk-dot" title="${dStr}: No record"><b>${dayName}</b>·</div>`;
-    }).join("");
-  }
-
-  // 3. Workout Card
-  if ($("wo-streak-badge")) $("wo-streak-badge").textContent = "💪 " + (h.workoutStreak || 0) + " Days";
-  const allExercises = [...DEFAULT_WORKOUTS, ...(h.customWorkouts || [])];
-  const filtered = curWorkoutCat === "all" ? allExercises : allExercises.filter(x => x.cat === curWorkoutCat || x.cat === "all");
-  const exDone = todayWork.exDone || [];
-
-  const exList = $("exercise-list");
-  if (exList) {
-    exList.innerHTML = filtered.map(ex => {
-      const isDone = exDone.includes(ex.id);
-      return `
-        <div class="exercise-item ${isDone ? 'done' : ''}" data-eid="${ex.id}">
-          <div>
-            <b style="font-size:13px">${ex.name}</b>
-            <div class="hint" style="margin:2px 0 0;font-size:11px">${ex.reps}</div>
-          </div>
-          <div class="exercise-checkbox">${isDone ? '✓' : ''}</div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  const btnWo = $("btn-complete-workout");
-  if (btnWo) {
-    if (todayWork.done) {
-      btnWo.textContent = "✓ Today's Workout Completed! 💪";
-      btnWo.style.background = "#059669";
-    } else {
-      btnWo.textContent = "💪 Complete Today's Workout (" + exDone.length + "/" + filtered.length + " done)";
-      btnWo.style.background = "linear-gradient(135deg,#10b981,#059669)";
-    }
-  }
-
-  // 4. Hydration Water Grid
-  if ($("water-stat-text")) $("water-stat-text").textContent = todayWater + " / 8 Glasses (" + (todayWater * 250) + " ml)";
-  if ($("water-bar")) $("water-bar").style.width = Math.min(100, (todayWater / 8) * 100) + "%";
-  const wGrid = $("water-grid");
-  if (wGrid) {
-    let wHtml = "";
-    for (let i = 1; i <= 8; i++) {
-      const isFilled = i <= todayWater;
-      wHtml += `
-        <button class="water-glass-btn ${isFilled ? 'filled' : ''}" data-glass="${i}">
-          <span class="glass-icon">${isFilled ? '💧' : '🥛'}</span>
-          <span>${i * 250}ml</span>
-        </button>
-      `;
-    }
-    wGrid.innerHTML = wHtml;
-  }
-
-  // 5. Mind & Health Checkboxes
-  if ($("chk-meditation")) $("chk-meditation").checked = !!todayMind.meditation;
-  if ($("chk-reading")) $("chk-reading").checked = !!todayMind.reading;
-  if ($("chk-healthy-food")) $("chk-healthy-food").checked = !!todayMind.healthyFood;
-}
-
-// Bind Event Handlers
-document.addEventListener("DOMContentLoaded", () => {
-  renderHabits();
-});
-
-// Wakeup Check-in Action
-if ($("btn-wakeup-checkin")) {
-  $("btn-wakeup-checkin").onclick = () => {
-    const h = getHabitState();
-    const now = new Date();
-    const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
-    const target = h.wakeupTime || "04:30";
-    const onTime = curTime <= "05:00";
-    
-    if (!h.wakeupLog[TD]) {
-      h.wakeupStreak = (h.wakeupStreak || 0) + 1;
-    }
-    h.wakeupLog[TD] = { checkedIn: true, time: curTime, onTime: onTime };
-    saveHabitState(h);
-    renderHabits();
-    chime();
-    rain(["🌅", "☀️", "⏰", "⭐", "💪"], 25);
-    
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    if (onTime) {
-      sayMaheshStyle("Super " + uName + "! 4:30 AM ki lechavu... early morning discipline unte victory confirm!");
-    } else {
-      sayMaheshStyle("Good morning " + uName + "! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!");
-    }
-  };
-}
-
-// Quick Home Wakeup button
-if ($("home-quick-wakeup")) {
-  $("home-quick-wakeup").onclick = () => {
-    const h = getHabitState();
-    if (h.wakeupLog[TD] && h.wakeupLog[TD].checkedIn) {
-      document.querySelector('[data-target="view-habits"]').click();
-    } else {
-      if ($("btn-wakeup-checkin")) $("btn-wakeup-checkin").click();
-    }
-  };
-}
-
-// Wakeup Alarm Toggle & Test
-if ($("btn-toggle-alarm")) {
-  $("btn-toggle-alarm").onclick = () => {
-    const h = getHabitState();
-    h.alarmEnabled = !h.alarmEnabled;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("wk-time-input")) {
-  $("wk-time-input").onchange = e => {
-    const h = getHabitState();
-    h.wakeupTime = e.target.value;
-    saveHabitState(h);
-  };
-}
-if ($("btn-test-alarm")) {
-  $("btn-test-alarm").onclick = () => {
-    playWakeupAlarmSound();
-  };
-}
-if ($("btn-req-notif")) {
-  $("btn-req-notif").onclick = async () => {
-    if ("Notification" in window) {
-      const res = await Notification.requestPermission();
-      if (res === "granted") {
-        alert("Notification permission granted! 4:30 AM కి మీకు reminder వస్తుంది.");
-      } else {
-        alert("Notification permission denied. Browser settings lo allow cheయండి.");
-      }
-    } else {
-      alert("Ee browser lo notifications support ledu.");
-    }
-  };
-}
-
-// Discipline to Savings Rules
-if ($("btn-reward-wakeup")) {
-  $("btn-reward-wakeup").onclick = () => {
-    addVoiceEntryDirect(10, "4:30 AM Wakeup Reward");
-  };
-}
-if ($("btn-penalty-wakeup")) {
-  $("btn-penalty-wakeup").onclick = () => {
-    addVoiceEntryDirect(10, "Missed 4:30 AM Wakeup Penalty");
-  };
-}
-
-// Workout Category Tabs
-if ($("wo-cats")) {
-  $("wo-cats").onclick = e => {
-    const btn = e.target.closest("[data-wcat]");
-    if (!btn) return;
-    $("wo-cats").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
-    btn.classList.add("on");
-    curWorkoutCat = btn.dataset.wcat;
-    renderHabits();
-  };
-}
-
-// Exercise Item Toggle
-if ($("exercise-list")) {
-  $("exercise-list").onclick = e => {
-    const item = e.target.closest(".exercise-item");
-    if (!item) return;
-    const eid = item.dataset.eid;
-    const h = getHabitState();
-    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
-    const exDone = h.workoutLog[TD].exDone || [];
-    const idx = exDone.indexOf(eid);
-    if (idx >= 0) {
-      exDone.splice(idx, 1);
-    } else {
-      exDone.push(eid);
-      beep();
-    }
-    h.workoutLog[TD].exDone = exDone;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-
-// Add Custom Exercise
-if ($("btn-add-exercise")) {
-  $("btn-add-exercise").onclick = () => {
-    const name = ($("custom-ex-name").value || "").trim();
-    const reps = ($("custom-ex-reps").value || "3 sets × 10").trim();
-    if (!name) return alert("Exercise name enter cheyandi.");
-    const h = getHabitState();
-    h.customWorkouts.push({
-      id: "cw_" + Date.now(),
-      name: name,
-      reps: reps,
-      cat: "all"
-    });
-    saveHabitState(h);
-    $("custom-ex-name").value = "";
-    $("custom-ex-reps").value = "";
-    renderHabits();
-  };
-}
-
-// Complete Workout Button
-if ($("btn-complete-workout")) {
-  $("btn-complete-workout").onclick = () => {
-    const h = getHabitState();
-    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
-    h.workoutLog[TD].done = true;
-    h.workoutStreak = (h.workoutStreak || 0) + 1;
-    saveHabitState(h);
-    renderHabits();
-    chime();
-    rain(["💪", "🏋️", "🔥", "⭐", "🏆"], 30);
-    
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    sayMaheshStyle("Keka " + uName + "! Home workout complete chesav... nee health e nee real wealth!");
-  };
-}
-if ($("btn-reward-workout")) {
-  $("btn-reward-workout").onclick = () => {
-    addVoiceEntryDirect(20, "Daily Workout Reward");
-  };
-}
-
-// Workout Interval Timer
-function updateTimerDisplay() {
-  const m = Math.floor(workoutTimerRemaining / 60);
-  const s = workoutTimerRemaining % 60;
-  if ($("timer-digits")) {
-    $("timer-digits").textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-  }
-}
-if ($("timer-presets")) {
-  $("timer-presets").onclick = e => {
-    const btn = e.target.closest("[data-sec]");
-    if (!btn) return;
-    $("timer-presets").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
-    btn.classList.add("on");
-    workoutTimerSeconds = parseInt(btn.dataset.sec, 10);
-    workoutTimerRemaining = workoutTimerSeconds;
-    if (workoutTimerRunning && workoutTimerInterval) {
-      clearInterval(workoutTimerInterval);
-      workoutTimerRunning = false;
-    }
-    if ($("timer-status")) $("timer-status").textContent = "Ready (" + workoutTimerSeconds + "s)";
-    updateTimerDisplay();
-  };
-}
-if ($("btn-timer-start")) {
-  $("btn-timer-start").onclick = () => {
-    if (workoutTimerRunning) return;
-    if (workoutTimerRemaining <= 0) workoutTimerRemaining = workoutTimerSeconds;
-    workoutTimerRunning = true;
-    if ($("timer-status")) $("timer-status").textContent = "Running... 🔥";
-    playTimerBeep(false);
-    
-    workoutTimerInterval = setInterval(() => {
-      workoutTimerRemaining--;
-      updateTimerDisplay();
-      if (workoutTimerRemaining <= 3 && workoutTimerRemaining > 0) {
-        playTimerBeep(false);
-      }
-      if (workoutTimerRemaining <= 0) {
-        clearInterval(workoutTimerInterval);
-        workoutTimerRunning = false;
-        if ($("timer-status")) $("timer-status").textContent = "Time Up! Rest Over 🔔";
-        playTimerBeep(true);
-        chime();
-      }
-    }, 1000);
-  };
-}
-if ($("btn-timer-pause")) {
-  $("btn-timer-pause").onclick = () => {
-    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-    workoutTimerRunning = false;
-    if ($("timer-status")) $("timer-status").textContent = "Paused";
-  };
-}
-if ($("btn-timer-reset")) {
-  $("btn-timer-reset").onclick = () => {
-    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
-    workoutTimerRunning = false;
-    workoutTimerRemaining = workoutTimerSeconds;
-    if ($("timer-status")) $("timer-status").textContent = "Ready";
-    updateTimerDisplay();
-  };
-}
-
-// Hydration Water Glass Clicks
-if ($("water-grid")) {
-  $("water-grid").onclick = e => {
-    const btn = e.target.closest("[data-glass]");
-    if (!btn) return;
-    const gNum = parseInt(btn.dataset.glass, 10);
-    const h = getHabitState();
-    h.waterLog[TD] = gNum;
-    saveHabitState(h);
-    beep();
-    renderHabits();
-    
-    if (gNum === 8) {
-      chime();
-      rain(["💧", "🌊", "🥤", "⭐", "🏆"], 25);
-      const uObj = users()[U] || {};
-      const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-      sayMaheshStyle("Good job " + uName + "! Roju 2 liters water tagavu, hydration is power!");
-    }
-  };
-}
-if ($("home-quick-water")) {
-  $("home-quick-water").onclick = () => {
-    const h = getHabitState();
-    const cur = h.waterLog[TD] || 0;
-    h.waterLog[TD] = Math.min(8, cur + 1);
-    saveHabitState(h);
-    beep();
-    renderHabits();
-  };
-}
-
-// Meditation & Deep Breathing Visual Guide
-if ($("btn-toggle-breathe-guide")) {
-  $("btn-toggle-breathe-guide").onclick = () => {
-    const box = $("breathe-box");
-    if (!box) return;
-    const isShowing = box.style.display !== "none";
-    if (isShowing) {
-      box.style.display = "none";
-      if (breatheInterval) clearInterval(breatheInterval);
-    } else {
-      box.style.display = "block";
-      const circle = $("breathe-circle");
-      const instr = $("breathe-instruction");
-      let phase = 0;
-      const phases = [
-        { text: "Inhale...", sub: "Breathe in deeply through nose (4s)" },
-        { text: "Hold...", sub: "Hold your breath gently (4s)" },
-        { text: "Exhale...", sub: "Exhale slowly through mouth (4s)" }
-      ];
-      if (breatheInterval) clearInterval(breatheInterval);
-      breatheInterval = setInterval(() => {
-        phase = (phase + 1) % phases.length;
-        if (circle) circle.textContent = phases[phase].text;
-        if (instr) instr.textContent = phases[phase].sub;
-      }, 4000);
-    }
-  };
-}
-
-// Mind Checkboxes
-if ($("chk-meditation")) {
-  $("chk-meditation").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].meditation = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("chk-reading")) {
-  $("chk-reading").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].reading = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-if ($("chk-healthy-food")) {
-  $("chk-healthy-food").onchange = e => {
-    const h = getHabitState();
-    if (!h.mindLog[TD]) h.mindLog[TD] = {};
-    h.mindLog[TD].healthyFood = e.target.checked;
-    saveHabitState(h);
-    renderHabits();
-  };
-}
-
-// Navigation Jump from Home to Routine
-if ($("btn-goto-routine")) {
-  $("btn-goto-routine").onclick = () => {
-    const navBtn = document.querySelector('[data-target="view-habits"]');
-    if (navBtn) navBtn.click();
-  };
-}
-if ($("home-quick-workout")) {
-  $("home-quick-workout").onclick = () => {
-    const navBtn = document.querySelector('[data-target="view-habits"]');
-    if (navBtn) navBtn.click();
-  };
-}
-
-
-// ==========================================================
-// CELEBRITY VOICE COACH ENGINE (PRABHAS & MAHESH BABU)
-// ==========================================================
-let curVoiceCoach = localStorage.getItem("rsb_voice_coach") || "prabhas";
-
-function setVoiceCoach(coach) {
-  curVoiceCoach = coach;
-  try { localStorage.setItem("rsb_voice_coach", coach); } catch(e) {}
-  updateVoiceCoachUI();
-}
-
-function updateVoiceCoachUI() {
-  if ($("cur-voice-badge")) {
-    $("cur-voice-badge").textContent = curVoiceCoach === "prabhas" ? "👑 Prabhas" : "⭐ Mahesh Babu";
-  }
-  const chips = $("voice-coach-chips");
-  if (chips) {
-    chips.querySelectorAll(".tab").forEach(b => {
-      b.classList.toggle("on", b.dataset.coach === curVoiceCoach);
-    });
-  }
-}
-
-function speakCelebrity(type, data = {}) {
-  if (!window._snd || !window.speechSynthesis) return;
-  try {
-    window.speechSynthesis.cancel();
-    const uObj = users()[U] || {};
-    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-    const g = G() || { name: "Savings Goal" };
-    let text = "";
-    
-    if (curVoiceCoach === "prabhas") {
-      // Prabhas Rebel Star / Darling Style
-      if (type === "add_money") {
-        text = `${data.amt || ""} rupees mee savings bank ki add ayindi darling! Mee goal ${data.goalName || g.name} kosam... Thaggedhe le darling ${uName}!`;
-      } else if (type === "goal_complete") {
-        text = `Darling ${uName}! Record baddhalu kottav darling... Goal ${data.goalName || g.name} target motham reach ayindi! Pandaga chesko darling!`;
-      } else if (type === "break_piggy") {
-        text = `Baddhalayindi darling! Piggy bank baddhalu kottav... Super discipline darling ${uName}!`;
-      } else if (type === "wakeup_ontime") {
-        text = `Super darling ${uName}! 4:30 AM ki lechavu... early morning lechinodu eppatiki odipodu darling!`;
-      } else if (type === "wakeup_late") {
-        text = `Good morning darling ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu darling!`;
-      } else if (type === "workout_complete") {
-        text = `Keka darling ${uName}! Home workout complete chesav... Fitness unte manalni evaru aapanu leru darling!`;
-      } else if (type === "water_complete") {
-        text = `Good job darling ${uName}! Roju 2 liters water tagavu, hydration is power darling!`;
-      } else if (type === "test_prabhas" || type === "test") {
-        text = `Darling ${uName}! Taggedhe le darling... My Savings Bank lo ninnu evaru aapaleru!`;
-      } else if (type === "custom") {
-        text = data.text || "";
-      }
-    } else {
-      // Mahesh Babu Punch Style
-      if (type === "add_money") {
-        text = `${data.amt || ""} rupees mee savings bank ki add ayindi, mee goal ${data.goalName || g.name} kosam... Super ${uName}!`;
-      } else if (type === "goal_complete") {
-        text = `Mind blowing ${uName}! Goal ${data.goalName || g.name} complete chesav... Success ante idhi!`;
-      } else if (type === "break_piggy") {
-        text = `Piggy bank smash chesav ${uName}! Nee target complete ayindi, super!`;
-      } else if (type === "wakeup_ontime") {
-        text = `Super ${uName}! 4:30 AM ki lechavu... early morning discipline unte victory confirm!`;
-      } else if (type === "wakeup_late") {
-        text = `Good morning ${uName}! Eeroju check-in aipoyindi... Repu 4:30 AM ki ready ga undu!`;
-      } else if (type === "workout_complete") {
-        text = `Keka ${uName}! Home workout complete chesav... nee health e nee real wealth!`;
-      } else if (type === "water_complete") {
-        text = `Good job ${uName}! Roju 2 liters water tagavu, hydration is power!`;
-      } else if (type === "test_mahesh" || type === "test") {
-        text = `Hey ${uName}! Okkasari commit aithe naa maata nene vinanu... Save smart!`;
-      } else if (type === "custom") {
-        text = data.text || "";
-      }
-    }
-
-    const u = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const teluguVoice = voices.find(v => v.lang === "te-IN" || v.lang === "te_IN");
-    const indianVoice = voices.find(v => v.lang === "en-IN" || v.name.includes("India"));
-    if (teluguVoice) u.voice = teluguVoice;
-    else if (indianVoice) u.voice = indianVoice;
-
-    if (curVoiceCoach === "prabhas") {
-      u.pitch = 0.82; // Deep, calm, baritone tone
-      u.rate = 0.98;
-    } else {
-      u.pitch = 0.94; // Brisk punchy tone
-      u.rate = 1.05;
-    }
-    u.volume = 1.0;
-    window.speechSynthesis.speak(u);
-  } catch(e) {}
-}
-
-function sayMaheshStyle(text) {
-  speakCelebrity("custom", { text });
-}
-
-// Voice coach button events
-if ($("voice-coach-chips")) {
-  $("voice-coach-chips").onclick = e => {
-    const btn = e.target.closest("[data-coach]");
-    if (!btn) return;
-    setVoiceCoach(btn.dataset.coach);
-    speakCelebrity("test");
-  };
-}
-if ($("btn-test-prabhas-voice")) {
-  $("btn-test-prabhas-voice").onclick = () => {
-    setVoiceCoach("prabhas");
-    speakCelebrity("test_prabhas");
-  };
-}
-if ($("btn-test-mahesh-voice")) {
-  $("btn-test-mahesh-voice").onclick = () => {
-    setVoiceCoach("mahesh");
-    speakCelebrity("test_mahesh");
-  };
-}
 
 // ==========================================================
 // INTERACTIVE PIGGY BANK AUDIO & ANIMATIONS
@@ -3141,14 +2575,591 @@ if ($("btn-close-break-modal")) {
   };
 }
 
-try{updateVoiceCoachUI();}catch(e){}
-runSplashScreen(true);
-};
+
+// ==========================================================
+// DAILY ROUTINE, 4:30 AM WAKEUP & WORKOUT ENGINE
+// ==========================================================
+function getHabitState() {
+  const k = "rsb_habits_" + (U || "default");
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(k)); } catch(e) {}
+  if (!data) {
+    data = {
+      wakeupTime: "04:30",
+      alarmEnabled: true,
+      lastAlarmDate: "",
+      wakeupLog: {},
+      wakeupStreak: 0,
+      workoutLog: {},
+      workoutStreak: 0,
+      customWorkouts: [],
+      waterLog: {},
+      mindLog: {}
+    };
+  }
+  if (!data.wakeupLog) data.wakeupLog = {};
+  if (!data.workoutLog) data.workoutLog = {};
+  if (!data.waterLog) data.waterLog = {};
+  if (!data.mindLog) data.mindLog = {};
+  if (!data.customWorkouts) data.customWorkouts = [];
+  return data;
+}
+
+function saveHabitState(h) {
+  const k = "rsb_habits_" + (U || "default");
+  try { localStorage.setItem(k, JSON.stringify(h)); } catch(e) {}
+}
+
+const DEFAULT_WORKOUTS = [
+  { id: "w1", name: "Pushups", reps: "3 sets × 15 reps", cat: "all" },
+  { id: "w2", name: "Bodyweight Squats", reps: "3 sets × 20 reps", cat: "all" },
+  { id: "w3", name: "Plank Hold", reps: "3 sets × 45 sec", cat: "abs" },
+  { id: "w4", name: "Bicycle Crunches", reps: "3 sets × 20 reps", cat: "abs" },
+  { id: "w5", name: "Jumping Jacks", reps: "3 sets × 30 reps", cat: "cardio" },
+  { id: "w6", name: "High Knees", reps: "3 sets × 40 reps", cat: "cardio" },
+  { id: "w7", name: "Surya Namaskar & Yoga", reps: "10 mins morning flow", cat: "yoga" },
+  { id: "w8", name: "Cooldown Stretching", reps: "5 mins full body", cat: "yoga" }
+];
+
+let curWorkoutCat = "all";
+let workoutTimerInterval = null;
+let workoutTimerSeconds = 45;
+let workoutTimerRemaining = 45;
+let workoutTimerRunning = false;
+let breatheInterval = null;
+
+function playWakeupAlarmSound() {
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [440, 554.37, 659.25, 880, 1108.73, 1318.5];
+    notes.forEach((freq, idx) => {
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = "sine";
+      o.frequency.value = freq;
+      const t = c.currentTime + (idx * 0.14);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.25, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      o.connect(g);
+      g.connect(c.destination);
+      o.start(t);
+      o.stop(t + 0.4);
+    });
+  } catch(e) {}
+}
+
+function playTimerBeep(isFinal) {
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = isFinal ? "square" : "sine";
+    o.frequency.value = isFinal ? 1200 : 800;
+    const t = c.currentTime;
+    g.gain.setValueAtTime(0.2, t);
+    g.gain.exponentialRampToValueAtTime(0.01, t + (isFinal ? 0.45 : 0.15));
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(t);
+    o.stop(t + (isFinal ? 0.5 : 0.2));
+  } catch(e) {}
+}
+
+function checkWakeupReminderAlarm() {
+  const hState = getHabitState();
+  if (!hState.alarmEnabled) return;
+  const now = new Date();
+  const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+  const target = hState.wakeupTime || "04:30";
+  if (curTime === target && hState.lastAlarmDate !== TD) {
+    hState.lastAlarmDate = TD;
+    saveHabitState(hState);
+    playWakeupAlarmSound();
+    if ("Notification" in window && Notification.permission === "granted") {
+      try {
+        new Notification("⏰ 4:30 AM Wakeup Reminder!", {
+          body: "4:30 AM అయింది! లేచి మీ రోజును ఉత్సాహంగా ప్రారంభించండి!",
+          icon: "icon-192.png"
+        });
+      } catch(e) {}
+    }
+    const uObj = users()[U] || {};
+    const uName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
+    speakCelebrity("custom", { text: "Good morning " + uName + "! 4:30 AM ayindi, lechi rojuna shuru chey!" });
+  }
+}
+
+function renderHabits() {
+  const h = getHabitState();
+  const todayWake = h.wakeupLog[TD];
+  const todayWork = h.workoutLog[TD] || { done: false, exDone: [] };
+  const todayWater = h.waterLog[TD] || 0;
+  const todayMind = h.mindLog[TD] || { meditation: false, reading: false, healthyFood: false };
+
+  // 1. Overall Score
+  let doneCount = 0;
+  if (todayWake && todayWake.checkedIn) doneCount++;
+  if (todayWork.done) doneCount++;
+  if (todayWater >= 8) doneCount++;
+  if (todayMind.meditation || todayMind.reading) doneCount++;
+  const scorePct = Math.round((doneCount / 4) * 100);
+  
+  if ($("habits-score-pct")) $("habits-score-pct").textContent = scorePct + "%";
+  if ($("habits-score-bar")) $("habits-score-bar").style.width = scorePct + "%";
+  if ($("habits-score-text")) $("habits-score-text").textContent = doneCount + " of 4 habits done";
+  if ($("habits-today-date")) $("habits-today-date").textContent = "Today · " + TD;
+
+  // Home Quick Widget Updates
+  if ($("home-wakeup-st")) {
+    if (todayWake && todayWake.checkedIn) {
+      $("home-wakeup-st").textContent = "✓ " + (todayWake.time || "Done");
+      $("home-wakeup-st").style.color = "#10b981";
+    } else {
+      $("home-wakeup-st").textContent = "Check-in";
+      $("home-wakeup-st").style.color = "#fbbf24";
+    }
+  }
+  if ($("home-workout-st")) {
+    const exCount = (todayWork.exDone || []).length;
+    $("home-workout-st").textContent = todayWork.done ? "✓ Complete" : (exCount + "/5 Done");
+    $("home-workout-st").style.color = todayWork.done ? "#10b981" : "#34d399";
+  }
+  if ($("home-water-st")) {
+    $("home-water-st").textContent = todayWater + "/8 Glasses";
+    $("home-water-st").style.color = todayWater >= 8 ? "#10b981" : "#38bdf8";
+  }
+
+  // 2. Wakeup Card
+  if ($("wk-time-input")) $("wk-time-input").value = h.wakeupTime || "04:30";
+  if ($("btn-toggle-alarm")) {
+    $("btn-toggle-alarm").textContent = h.alarmEnabled ? "🔔 Alarm: ON" : "🔕 Alarm: OFF";
+    $("btn-toggle-alarm").style.borderColor = h.alarmEnabled ? "#f59e0b" : "var(--bd)";
+  }
+  if ($("wk-streak-badge")) $("wk-streak-badge").textContent = "🔥 " + (h.wakeupStreak || 0) + " Days";
+
+  const banner = $("wk-checkin-banner");
+  const msg = $("wk-checkin-msg");
+  const btnWake = $("btn-wakeup-checkin");
+  if (todayWake && todayWake.checkedIn) {
+    if (msg) msg.innerHTML = "🎉 Today Checked in at <b>" + todayWake.time + "</b>! " + (todayWake.onTime ? "On Time! 🏆" : "Awake &amp; Active! ⭐");
+    if (btnWake) {
+      btnWake.textContent = "✓ Woke Up Checked In";
+      btnWake.style.background = "#059669";
+      btnWake.disabled = true;
+    }
+  } else {
+    if (msg) msg.textContent = "🌅 4:30 AM సమయానికి లేచి check-in అవ్వండి!";
+    if (btnWake) {
+      btnWake.textContent = "🌅 I Woke Up! (4:30 AM Check-In)";
+      btnWake.style.background = "linear-gradient(135deg,#f59e0b,#d97706)";
+      btnWake.disabled = false;
+    }
+  }
+
+  // Last 7 days wakeup history dots
+  const dotsContainer = $("wk-history-dots");
+  if (dotsContainer) {
+    const daysArr = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(TD + "T00:00:00");
+      d.setDate(d.getDate() - i);
+      daysArr.push(iso(d));
+    }
+    dotsContainer.innerHTML = daysArr.map(dStr => {
+      const entry = h.wakeupLog[dStr];
+      const dayName = new Date(dStr + "T00:00:00").toLocaleDateString("en-US", { weekday: "narrow" });
+      if (entry && entry.checkedIn) {
+        return `<div class="wk-dot ontime" title="${dStr}: Woke up at ${entry.time}"><b>${dayName}</b>✓</div>`;
+      }
+      return `<div class="wk-dot" title="${dStr}: No record"><b>${dayName}</b>·</div>`;
+    }).join("");
+  }
+
+  // 3. Workout Card
+  if ($("wo-streak-badge")) $("wo-streak-badge").textContent = "💪 " + (h.workoutStreak || 0) + " Days";
+  const allExercises = [...DEFAULT_WORKOUTS, ...(h.customWorkouts || [])];
+  const filtered = curWorkoutCat === "all" ? allExercises : allExercises.filter(x => x.cat === curWorkoutCat || x.cat === "all");
+  const exDone = todayWork.exDone || [];
+
+  const exList = $("exercise-list");
+  if (exList) {
+    exList.innerHTML = filtered.map(ex => {
+      const isDone = exDone.includes(ex.id);
+      return `
+        <div class="exercise-item ${isDone ? 'done' : ''}" data-eid="${ex.id}">
+          <div>
+            <b style="font-size:13px">${ex.name}</b>
+            <div class="hint" style="margin:2px 0 0;font-size:11px">${ex.reps}</div>
+          </div>
+          <div class="exercise-checkbox">${isDone ? '✓' : ''}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  const btnWo = $("btn-complete-workout");
+  if (btnWo) {
+    if (todayWork.done) {
+      btnWo.textContent = "✓ Today's Workout Completed! 💪";
+      btnWo.style.background = "#059669";
+    } else {
+      btnWo.textContent = "💪 Complete Today's Workout (" + exDone.length + "/" + filtered.length + " done)";
+      btnWo.style.background = "linear-gradient(135deg,#10b981,#059669)";
+    }
+  }
+
+  // 4. Hydration Water Grid
+  if ($("water-stat-text")) $("water-stat-text").textContent = todayWater + " / 8 Glasses (" + (todayWater * 250) + " ml)";
+  if ($("water-bar")) $("water-bar").style.width = Math.min(100, (todayWater / 8) * 100) + "%";
+  const wGrid = $("water-grid");
+  if (wGrid) {
+    let wHtml = "";
+    for (let i = 1; i <= 8; i++) {
+      const isFilled = i <= todayWater;
+      wHtml += `
+        <button class="water-glass-btn ${isFilled ? 'filled' : ''}" data-glass="${i}">
+          <span class="glass-icon">${isFilled ? '💧' : '🥛'}</span>
+          <span>${i * 250}ml</span>
+        </button>
+      `;
+    }
+    wGrid.innerHTML = wHtml;
+  }
+
+  // 5. Mind & Health Checkboxes
+  if ($("chk-meditation")) $("chk-meditation").checked = !!todayMind.meditation;
+  if ($("chk-reading")) $("chk-reading").checked = !!todayMind.reading;
+  if ($("chk-healthy-food")) $("chk-healthy-food").checked = !!todayMind.healthyFood;
+}
+
+// Wakeup Check-in Action
+if ($("btn-wakeup-checkin")) {
+  $("btn-wakeup-checkin").onclick = () => {
+    const h = getHabitState();
+    const now = new Date();
+    const curTime = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+    const target = h.wakeupTime || "04:30";
+    const onTime = curTime <= "05:00";
+    
+    if (!h.wakeupLog[TD]) {
+      h.wakeupStreak = (h.wakeupStreak || 0) + 1;
+    }
+    h.wakeupLog[TD] = { checkedIn: true, time: curTime, onTime: onTime };
+    saveHabitState(h);
+    renderHabits();
+    chime();
+    rain(["🌅", "☀️", "⏰", "⭐", "💪"], 25);
+    speakCelebrity(onTime ? "wakeup_ontime" : "wakeup_late");
+  };
+}
+
+// Quick Home Wakeup button
+if ($("home-quick-wakeup")) {
+  $("home-quick-wakeup").onclick = () => {
+    const h = getHabitState();
+    if (h.wakeupLog[TD] && h.wakeupLog[TD].checkedIn) {
+      document.querySelector('[data-target="view-habits"]').click();
+    } else {
+      if ($("btn-wakeup-checkin")) $("btn-wakeup-checkin").click();
+    }
+  };
+}
+
+// Wakeup Alarm Toggle & Test
+if ($("btn-toggle-alarm")) {
+  $("btn-toggle-alarm").onclick = () => {
+    const h = getHabitState();
+    h.alarmEnabled = !h.alarmEnabled;
+    saveHabitState(h);
+    renderHabits();
+  };
+}
+if ($("wk-time-input")) {
+  $("wk-time-input").onchange = e => {
+    const h = getHabitState();
+    h.wakeupTime = e.target.value;
+    saveHabitState(h);
+  };
+}
+if ($("btn-test-alarm")) {
+  $("btn-test-alarm").onclick = () => {
+    playWakeupAlarmSound();
+  };
+}
+if ($("btn-req-notif")) {
+  $("btn-req-notif").onclick = async () => {
+    if ("Notification" in window) {
+      const res = await Notification.requestPermission();
+      if (res === "granted") {
+        alert("Notification permission granted! 4:30 AM కి మీకు reminder వస్తుంది.");
+      } else {
+        alert("Notification permission denied. Browser settings lo allow cheయండి.");
+      }
+    } else {
+      alert("Ee browser lo notifications support ledu.");
+    }
+  };
+}
+
+// Discipline to Savings Rules
+if ($("btn-reward-wakeup")) {
+  $("btn-reward-wakeup").onclick = () => {
+    addVoiceEntryDirect(10, "4:30 AM Wakeup Reward");
+  };
+}
+if ($("btn-penalty-wakeup")) {
+  $("btn-penalty-wakeup").onclick = () => {
+    addVoiceEntryDirect(10, "Missed 4:30 AM Wakeup Penalty");
+  };
+}
+
+// Workout Category Tabs
+if ($("wo-cats")) {
+  $("wo-cats").onclick = e => {
+    const btn = e.target.closest("[data-wcat]");
+    if (!btn) return;
+    $("wo-cats").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
+    btn.classList.add("on");
+    curWorkoutCat = btn.dataset.wcat;
+    renderHabits();
+  };
+}
+
+// Exercise Item Toggle
+if ($("exercise-list")) {
+  $("exercise-list").onclick = e => {
+    const item = e.target.closest(".exercise-item");
+    if (!item) return;
+    const eid = item.dataset.eid;
+    const h = getHabitState();
+    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
+    const exDone = h.workoutLog[TD].exDone || [];
+    const idx = exDone.indexOf(eid);
+    if (idx >= 0) {
+      exDone.splice(idx, 1);
+    } else {
+      exDone.push(eid);
+      beep();
+    }
+    h.workoutLog[TD].exDone = exDone;
+    saveHabitState(h);
+    renderHabits();
+  };
+}
+
+// Add Custom Exercise
+if ($("btn-add-exercise")) {
+  $("btn-add-exercise").onclick = () => {
+    const name = ($("custom-ex-name").value || "").trim();
+    const reps = ($("custom-ex-reps").value || "3 sets × 10").trim();
+    if (!name) return alert("Exercise name enter cheyandi.");
+    const h = getHabitState();
+    h.customWorkouts.push({
+      id: "cw_" + Date.now(),
+      name: name,
+      reps: reps,
+      cat: "all"
+    });
+    saveHabitState(h);
+    $("custom-ex-name").value = "";
+    $("custom-ex-reps").value = "";
+    renderHabits();
+  };
+}
+
+// Complete Workout Button
+if ($("btn-complete-workout")) {
+  $("btn-complete-workout").onclick = () => {
+    const h = getHabitState();
+    if (!h.workoutLog[TD]) h.workoutLog[TD] = { done: false, exDone: [] };
+    h.workoutLog[TD].done = true;
+    h.workoutStreak = (h.workoutStreak || 0) + 1;
+    saveHabitState(h);
+    renderHabits();
+    chime();
+    rain(["💪", "🏋️", "🔥", "⭐", "🏆"], 30);
+    speakCelebrity("workout_complete");
+  };
+}
+if ($("btn-reward-workout")) {
+  $("btn-reward-workout").onclick = () => {
+    addVoiceEntryDirect(20, "Daily Workout Reward");
+  };
+}
+
+// Workout Interval Timer
+function updateTimerDisplay() {
+  const m = Math.floor(workoutTimerRemaining / 60);
+  const s = workoutTimerRemaining % 60;
+  if ($("timer-digits")) {
+    $("timer-digits").textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  }
+}
+if ($("timer-presets")) {
+  $("timer-presets").onclick = e => {
+    const btn = e.target.closest("[data-sec]");
+    if (!btn) return;
+    $("timer-presets").querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
+    btn.classList.add("on");
+    workoutTimerSeconds = parseInt(btn.dataset.sec, 10);
+    workoutTimerRemaining = workoutTimerSeconds;
+    if (workoutTimerRunning && workoutTimerInterval) {
+      clearInterval(workoutTimerInterval);
+      workoutTimerRunning = false;
+    }
+    if ($("timer-status")) $("timer-status").textContent = "Ready (" + workoutTimerSeconds + "s)";
+    updateTimerDisplay();
+  };
+}
+if ($("btn-timer-start")) {
+  $("btn-timer-start").onclick = () => {
+    if (workoutTimerRunning) return;
+    if (workoutTimerRemaining <= 0) workoutTimerRemaining = workoutTimerSeconds;
+    workoutTimerRunning = true;
+    if ($("timer-status")) $("timer-status").textContent = "Running... 🔥";
+    playTimerBeep(false);
+    
+    workoutTimerInterval = setInterval(() => {
+      workoutTimerRemaining--;
+      updateTimerDisplay();
+      if (workoutTimerRemaining <= 3 && workoutTimerRemaining > 0) {
+        playTimerBeep(false);
+      }
+      if (workoutTimerRemaining <= 0) {
+        clearInterval(workoutTimerInterval);
+        workoutTimerRunning = false;
+        if ($("timer-status")) $("timer-status").textContent = "Time Up! Rest Over 🔔";
+        playTimerBeep(true);
+        chime();
+      }
+    }, 1000);
+  };
+}
+if ($("btn-timer-pause")) {
+  $("btn-timer-pause").onclick = () => {
+    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+    workoutTimerRunning = false;
+    if ($("timer-status")) $("timer-status").textContent = "Paused";
+  };
+}
+if ($("btn-timer-reset")) {
+  $("btn-timer-reset").onclick = () => {
+    if (workoutTimerInterval) clearInterval(workoutTimerInterval);
+    workoutTimerRunning = false;
+    workoutTimerRemaining = workoutTimerSeconds;
+    if ($("timer-status")) $("timer-status").textContent = "Ready";
+    updateTimerDisplay();
+  };
+}
+
+// Hydration Water Glass Clicks
+if ($("water-grid")) {
+  $("water-grid").onclick = e => {
+    const btn = e.target.closest("[data-glass]");
+    if (!btn) return;
+    const gNum = parseInt(btn.dataset.glass, 10);
+    const h = getHabitState();
+    h.waterLog[TD] = gNum;
+    saveHabitState(h);
+    beep();
+    renderHabits();
+    
+    if (gNum === 8) {
+      chime();
+      rain(["💧", "🌊", "🥤", "⭐", "🏆"], 25);
+      speakCelebrity("water_complete");
+    }
+  };
+}
+if ($("home-quick-water")) {
+  $("home-quick-water").onclick = () => {
+    const h = getHabitState();
+    const cur = h.waterLog[TD] || 0;
+    h.waterLog[TD] = Math.min(8, cur + 1);
+    saveHabitState(h);
+    beep();
+    renderHabits();
+  };
+}
+
+// Meditation & Deep Breathing Visual Guide
+if ($("btn-toggle-breathe-guide")) {
+  $("btn-toggle-breathe-guide").onclick = () => {
+    const box = $("breathe-box");
+    if (!box) return;
+    const isShowing = box.style.display !== "none";
+    if (isShowing) {
+      box.style.display = "none";
+      if (breatheInterval) clearInterval(breatheInterval);
+    } else {
+      box.style.display = "block";
+      const circle = $("breathe-circle");
+      const instr = $("breathe-instruction");
+      let phase = 0;
+      const phases = [
+        { text: "Inhale...", sub: "Breathe in deeply through nose (4s)" },
+        { text: "Hold...", sub: "Hold your breath gently (4s)" },
+        { text: "Exhale...", sub: "Exhale slowly through mouth (4s)" }
+      ];
+      if (breatheInterval) clearInterval(breatheInterval);
+      breatheInterval = setInterval(() => {
+        phase = (phase + 1) % phases.length;
+        if (circle) circle.textContent = phases[phase].text;
+        if (instr) instr.textContent = phases[phase].sub;
+      }, 4000);
+    }
+  };
+}
+
+// Mind Checkboxes
+if ($("chk-meditation")) {
+  $("chk-meditation").onchange = e => {
+    const h = getHabitState();
+    if (!h.mindLog[TD]) h.mindLog[TD] = {};
+    h.mindLog[TD].meditation = e.target.checked;
+    saveHabitState(h);
+    renderHabits();
+  };
+}
+if ($("chk-reading")) {
+  $("chk-reading").onchange = e => {
+    const h = getHabitState();
+    if (!h.mindLog[TD]) h.mindLog[TD] = {};
+    h.mindLog[TD].reading = e.target.checked;
+    saveHabitState(h);
+    renderHabits();
+  };
+}
+if ($("chk-healthy-food")) {
+  $("chk-healthy-food").onchange = e => {
+    const h = getHabitState();
+    if (!h.mindLog[TD]) h.mindLog[TD] = {};
+    h.mindLog[TD].healthyFood = e.target.checked;
+    saveHabitState(h);
+    renderHabits();
+  };
+}
+
+// Navigation Jump from Home to Routine
+if ($("btn-goto-routine")) {
+  $("btn-goto-routine").onclick = () => {
+    const navBtn = document.querySelector('[data-target="view-habits"]');
+    if (navBtn) navBtn.click();
+  };
+}
+if ($("home-quick-workout")) {
+  $("home-quick-workout").onclick = () => {
+    const navBtn = document.querySelector('[data-target="view-habits"]');
+    if (navBtn) navBtn.click();
+  };
+}
+
 
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.4.0";
+const CURRENT_APP_VERSION = "2.5.0";
 
 function showUpdateToast() {
   const toast = $("update-toast");
@@ -3165,10 +3176,11 @@ function hideUpdateToast() {
 }
 
 let newWorkerWaiting = false;
+let refreshing = false;
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").then(reg => {
-    // 1. If an update is already waiting, show update popup
+    // 1. If an update is waiting
     if (reg.waiting) {
       newWorkerWaiting = true;
       showUpdateToast();
@@ -3188,6 +3200,9 @@ if ("serviceWorker" in navigator) {
   }).catch(()=>{});
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    refreshing = true;
+    localStorage.setItem("rsb_app_ver", CURRENT_APP_VERSION);
     window.location.reload();
   });
 }
@@ -3205,6 +3220,7 @@ async function triggerAppUpdate() {
   if (btn) btn.textContent = "⏳ Updating...";
   const bSet = $("btn-settings-update");
   if (bSet) bSet.textContent = "⏳ Updating...";
+  
   localStorage.setItem("rsb_app_ver", CURRENT_APP_VERSION);
   hideUpdateToast();
   if (bSet) bSet.style.display = "none";
@@ -3212,6 +3228,10 @@ async function triggerAppUpdate() {
   if (st) st.textContent = "v" + CURRENT_APP_VERSION + " · Up to date ✅";
   
   try {
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
     if ("serviceWorker" in navigator) {
       const regs = await navigator.serviceWorker.getRegistrations();
       for (let r of regs) {
@@ -3219,12 +3239,12 @@ async function triggerAppUpdate() {
         await r.update();
       }
     }
-    if (window.caches) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
   } catch(e) {}
-  window.location.reload(true);
+  
+  // Reload bypassing disk cache with timestamp query
+  setTimeout(() => {
+    window.location.href = window.location.origin + window.location.pathname + "?v=" + Date.now();
+  }, 350);
 }
 
 $("btn-update-now").onclick = triggerAppUpdate;
@@ -3244,11 +3264,13 @@ $("btn-check-ver").onclick = async () => {
       }
     }
   } catch(e) {}
-  if (found || newWorkerWaiting) {
+  
+  const curStored = localStorage.getItem("rsb_app_ver");
+  if (found || newWorkerWaiting || (curStored && curStored !== CURRENT_APP_VERSION)) {
     st.textContent = "New update available 🎉";
     showUpdateToast();
   } else {
-    st.textContent = "v" + CURRENT_APP_VERSION + " · Already up to date ✅";
+    st.textContent = "v" + CURRENT_APP_VERSION + " · Up to date ✅";
     const bSet = $("btn-settings-update");
     if (bSet) bSet.style.display = "none";
     setTimeout(() => { st.textContent = "v" + CURRENT_APP_VERSION + " · Up to date ✅"; }, 2500);
@@ -3257,7 +3279,14 @@ $("btn-check-ver").onclick = async () => {
 
 
 // ==========================================================
+// INITIAL APP STARTUP
+// ==========================================================
+render();
+try { renderHabits(); } catch(e) {}
+try { renderPiggyBank(G(), tot(G())); } catch(e) {}
+try { updateVoiceCoachUI(); } catch(e) {}
 runSplashScreen(true);
+
 </script>
 
 <!-- Break Piggy Bank Celebration Victory Modal -->
