@@ -1,4 +1,4 @@
-const C = "savings-v17-sidebar-writing-ai-learning";
+const C = "savings-v18-sidebar-menu-fixed";
 const A = [
   "./",
   "index.html",

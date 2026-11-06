@@ -1326,6 +1326,144 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 </head>
 <body>
 
+<!-- ==========================================================
+     SIDEBAR DRAWER & OVERLAY (Comprehensive Side Menu)
+========================================================== -->
+<div id="sidebar-backdrop" onclick="closeSidebar()" style="position:fixed;inset:0;background:rgba(4,9,26,0.76);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100001;opacity:0;pointer-events:none;transition:opacity 0.3s ease"></div>
+
+<aside id="sidebar-drawer" style="position:fixed;top:0;left:0;bottom:0;width:315px;max-width:86vw;background:linear-gradient(180deg,#07153b 0%,#0a1b47 50%,#050d24 100%);border-right:1px solid rgba(255,255,255,0.14);box-shadow:12px 0 40px rgba(0,0,0,0.75);z-index:100002;transform:translateX(-105%);transition:transform 0.32s cubic-bezier(0.16,1,0.3,1);display:flex;flex-direction:column;overflow:hidden;color:#f0f4fc">
+  <div class="sidebar-header" style="padding:22px 18px 14px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.08);position:relative">
+    <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close Sidebar" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;margin:0">✕</button>
+    <div class="sidebar-profile" style="display:flex;align-items:center;gap:12px">
+      <img src="icon-192.png" alt="Profile" class="sidebar-avatar" style="width:48px;height:48px;border-radius:14px;border:2px solid #60a5fa;box-shadow:0 4px 15px rgba(37,99,235,0.4);object-fit:cover;background:#0d276b">
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#fff" id="sb-user-name">Pavan Sai</div>
+        <div style="font-size:11px;color:#93c5fd" id="sb-user-badge">👑 Diamond Saver · 4:30 AM Club</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:10px;color:#94a3b8">✍️ Writing</div>
+        <div style="font-size:13px;font-weight:700;color:#60a5fa" id="sb-streak-write">0🔥</div>
+      </div>
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:10px;color:#94a3b8">🤖 AI Learn</div>
+        <div style="font-size:13px;font-weight:700;color:#a855f7" id="sb-streak-ai">0🔥</div>
+      </div>
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:10px;color:#94a3b8">⏰ 4:30 AM</div>
+        <div style="font-size:13px;font-weight:700;color:#34d399" id="sb-streak-wake">0🔥</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-body" style="flex:1;padding:12px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:14px">
+    <!-- Section 1: Core Daily Habits -->
+    <div>
+      <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">DAILY HABITS & GROWTH (అలవాట్లు)</div>
+      <div class="sidebar-menu-list">
+        <button class="sidebar-item" data-target="view-writing">
+          <span class="sidebar-item-icon">✍️</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Daily 2 Pages Writing</div>
+            <div class="sidebar-item-sub">Digital Diary · 2 Pages Goal · Streak</div>
+          </div>
+          <span class="sidebar-badge" id="sb-write-badge">0/2</span>
+        </button>
+
+        <button class="sidebar-item" data-target="view-ai-learn">
+          <span class="sidebar-item-icon">🤖</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Daily AI Learning Hub</div>
+            <div class="sidebar-item-sub">1 Topic Daily · 30-Day Roadmap · Notes</div>
+          </div>
+          <span class="sidebar-badge gold" id="sb-ai-badge">Day 1</span>
+        </button>
+
+        <button class="sidebar-item" data-target="view-habits">
+          <span class="sidebar-item-icon">⏰</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Routine & 4:30 AM Club</div>
+            <div class="sidebar-item-sub">Alarm · Workout · Water · Mind</div>
+          </div>
+          <span class="sidebar-badge green" id="sb-habit-badge">Active</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 2: Financial Management -->
+    <div>
+      <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">SAVINGS & FINANCE (పొదుపు)</div>
+      <div class="sidebar-menu-list">
+        <button class="sidebar-item active" data-target="view-home">
+          <span class="sidebar-item-icon">🏠</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Savings & Piggy Bank</div>
+            <div class="sidebar-item-sub">Goals · Voice Entry · 🏺 Interactive Piggy</div>
+          </div>
+        </button>
+
+        <button class="sidebar-item" data-target="view-history">
+          <span class="sidebar-item-icon">📊</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">History & Heatmap</div>
+            <div class="sidebar-item-sub">Statement · Passbook · Activity Grid</div>
+          </div>
+        </button>
+
+        <button class="sidebar-item" data-target="view-tools">
+          <span class="sidebar-item-icon">🧰</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Financial Calculators</div>
+            <div class="sidebar-item-sub">EMI · RD Interest · 50/30/20 Budget</div>
+          </div>
+        </button>
+
+        <button class="sidebar-item" data-target="view-fun">
+          <span class="sidebar-item-icon">🎮</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">AI Coach & Games</div>
+            <div class="sidebar-item-sub">Money Coach · Coin Catch · Daily Spin</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 3: Settings & Voices -->
+    <div>
+      <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">SYSTEM & PREFERENCES</div>
+      <div class="sidebar-menu-list">
+        <button class="sidebar-item" data-target="view-settings">
+          <span class="sidebar-item-icon">👑</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Prabhas Voice Coach</div>
+            <div class="sidebar-item-sub">Darling! Audio Cloner · Sound Effects</div>
+          </div>
+        </button>
+
+        <button class="sidebar-item" data-target="view-settings">
+          <span class="sidebar-item-icon">⚙️</span>
+          <div class="sidebar-item-info">
+            <div class="sidebar-item-title">Settings & Security</div>
+            <div class="sidebar-item-sub">App PIN · Theme · Cloud Sync</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer" style="padding:12px 16px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:#94a3b8">
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-weight:700;color:#60a5fa">v2.7.1</span>
+      <span>· Latest Edition ✅</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button onclick="toggleTheme()" style="width:auto;margin:0;padding:4px 8px;font-size:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:6px;color:#fff;cursor:pointer">🌓 Theme</button>
+    </div>
+  </div>
+</aside>
+
+
 <!-- Floating New Update Notification Toast (Only pops up when new update exists!) -->
 <div id="update-toast" class="update-toast">
   <div class="update-toast-content">
@@ -1373,7 +1511,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 <!-- Header (Clean, uncluttered, always visible) -->
 <div class="hd">
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95">
-    <button id="btn-open-sidebar" aria-label="Open Sidebar Menu" style="width:auto;margin:0;padding:5px 9px;background:rgba(255,255,255,.18);border-radius:9px;font-size:15px;border:1px solid rgba(255,255,255,0.25);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px">
+    <button id="btn-open-sidebar" onclick="openSidebar(); return false;" aria-label="Open Sidebar Menu" style="width:auto;margin:0;padding:5px 9px;background:rgba(255,255,255,.18);border-radius:9px;font-size:15px;border:1px solid rgba(255,255,255,0.25);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px">
       <span style="font-size:16px;line-height:1">☰</span>
       <span style="font-size:11px;font-weight:700">Menu</span>
     </button>
@@ -2294,21 +2432,48 @@ document.querySelectorAll(".sidebar-item[data-target]").forEach(item => {
   };
 });
 
-// Sidebar open & close functions
+// Sidebar open & close functions with robust inline fallback
 function openSidebar() {
   const sb = $("sidebar-drawer");
   const bd = $("sidebar-backdrop");
-  if (sb) sb.classList.add("open");
-  if (bd) bd.classList.add("open");
-  updateSidebarProfile();
+  if (sb) {
+    sb.classList.add("open");
+    sb.style.transform = "translateX(0)";
+  }
+  if (bd) {
+    bd.classList.add("open");
+    bd.style.display = "block";
+    bd.style.opacity = "1";
+    bd.style.pointerEvents = "auto";
+  }
+  if (typeof updateSidebarProfile === "function") updateSidebarProfile();
 }
 
 function closeSidebar() {
   const sb = $("sidebar-drawer");
   const bd = $("sidebar-backdrop");
-  if (sb) sb.classList.remove("open");
-  if (bd) bd.classList.remove("open");
+  if (sb) {
+    sb.classList.remove("open");
+    sb.style.transform = "translateX(-105%)";
+  }
+  if (bd) {
+    bd.classList.remove("open");
+    bd.style.opacity = "0";
+    bd.style.pointerEvents = "none";
+  }
 }
+
+function toggleTheme() {
+  if (typeof TH !== "undefined" && typeof applyTh === "function") {
+    TH.mode = { auto: "light", light: "dark", dark: "auto" }[TH.mode] || "dark";
+    applyTh();
+  }
+}
+
+window.openSidebar = openSidebar;
+window.closeSidebar = closeSidebar;
+window.toggleTheme = toggleTheme;
+
 
 if ($("btn-open-sidebar")) $("btn-open-sidebar").onclick = openSidebar;
 if ($("btn-bottom-menu")) $("btn-bottom-menu").onclick = openSidebar;
@@ -3667,7 +3832,7 @@ if ($("home-quick-workout")) {
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.7.0";
+const CURRENT_APP_VERSION = "2.7.1";
 
 function showUpdateToast() {
   const toast = $("update-toast");
