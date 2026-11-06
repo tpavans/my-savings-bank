@@ -1,4 +1,4 @@
-const C = "savings-v16-real-prabhas-voice";
+const C = "savings-v17-sidebar-writing-ai-learning";
 const A = [
   "./",
   "index.html",
