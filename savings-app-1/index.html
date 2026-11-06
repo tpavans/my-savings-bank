@@ -1327,13 +1327,13 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 <body>
 
 <!-- ==========================================================
-     SIDEBAR DRAWER & OVERLAY (Comprehensive Side Menu)
+     SIDEBAR DRAWER & OVERLAY (Bulletproof Universal Side Menu)
 ========================================================== -->
-<div id="sidebar-backdrop" onclick="closeSidebar()" style="position:fixed;inset:0;background:rgba(4,9,26,0.76);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100001;opacity:0;pointer-events:none;transition:opacity 0.3s ease"></div>
+<div id="sidebar-backdrop" onclick="closeSidebar(event)" ontouchend="closeSidebar(event)" style="display:none;position:fixed;inset:0;background:rgba(4,9,26,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100001;opacity:0;pointer-events:none;transition:opacity 0.25s ease"></div>
 
-<aside id="sidebar-drawer" style="position:fixed;top:0;left:0;bottom:0;width:315px;max-width:86vw;background:linear-gradient(180deg,#07153b 0%,#0a1b47 50%,#050d24 100%);border-right:1px solid rgba(255,255,255,0.14);box-shadow:12px 0 40px rgba(0,0,0,0.75);z-index:100002;transform:translateX(-105%);transition:transform 0.32s cubic-bezier(0.16,1,0.3,1);display:flex;flex-direction:column;overflow:hidden;color:#f0f4fc">
-  <div class="sidebar-header" style="padding:22px 18px 14px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.08);position:relative">
-    <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close Sidebar" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;margin:0">✕</button>
+<aside id="sidebar-drawer" style="display:none;position:fixed;top:0;left:0;bottom:0;width:320px;max-width:86vw;background:linear-gradient(180deg,#07153b 0%,#0a1b47 50%,#050d24 100%);border-right:1px solid rgba(255,255,255,0.18);box-shadow:12px 0 45px rgba(0,0,0,0.85);z-index:100002;overflow:hidden;color:#f0f4fc;flex-direction:column">
+  <div class="sidebar-header" style="padding:20px 16px 14px;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);position:relative">
+    <button class="sidebar-close-btn" onclick="closeSidebar(event)" ontouchend="closeSidebar(event)" aria-label="Close Sidebar" style="position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;margin:0">✕</button>
     <div class="sidebar-profile" style="display:flex;align-items:center;gap:12px">
       <img src="icon-192.png" alt="Profile" class="sidebar-avatar" style="width:48px;height:48px;border-radius:14px;border:2px solid #60a5fa;box-shadow:0 4px 15px rgba(37,99,235,0.4);object-fit:cover;background:#0d276b">
       <div>
@@ -1342,15 +1342,15 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
       </div>
     </div>
     <div style="display:flex;gap:6px;margin-top:10px">
-      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.08)">
         <div style="font-size:10px;color:#94a3b8">✍️ Writing</div>
         <div style="font-size:13px;font-weight:700;color:#60a5fa" id="sb-streak-write">0🔥</div>
       </div>
-      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.08)">
         <div style="font-size:10px;color:#94a3b8">🤖 AI Learn</div>
         <div style="font-size:13px;font-weight:700;color:#a855f7" id="sb-streak-ai">0🔥</div>
       </div>
-      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.06)">
+      <div style="flex:1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.08)">
         <div style="font-size:10px;color:#94a3b8">⏰ 4:30 AM</div>
         <div style="font-size:13px;font-weight:700;color:#34d399" id="sb-streak-wake">0🔥</div>
       </div>
@@ -1362,7 +1362,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     <div>
       <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">DAILY HABITS & GROWTH (అలవాట్లు)</div>
       <div class="sidebar-menu-list">
-        <button class="sidebar-item" data-target="view-writing">
+        <button class="sidebar-item" data-target="view-writing" onclick="switchAppView('view-writing'); return false;" ontouchend="switchAppView('view-writing'); return false;">
           <span class="sidebar-item-icon">✍️</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Daily 2 Pages Writing</div>
@@ -1371,7 +1371,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           <span class="sidebar-badge" id="sb-write-badge">0/2</span>
         </button>
 
-        <button class="sidebar-item" data-target="view-ai-learn">
+        <button class="sidebar-item" data-target="view-ai-learn" onclick="switchAppView('view-ai-learn'); return false;" ontouchend="switchAppView('view-ai-learn'); return false;">
           <span class="sidebar-item-icon">🤖</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Daily AI Learning Hub</div>
@@ -1380,7 +1380,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           <span class="sidebar-badge gold" id="sb-ai-badge">Day 1</span>
         </button>
 
-        <button class="sidebar-item" data-target="view-habits">
+        <button class="sidebar-item" data-target="view-habits" onclick="switchAppView('view-habits'); return false;" ontouchend="switchAppView('view-habits'); return false;">
           <span class="sidebar-item-icon">⏰</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Routine & 4:30 AM Club</div>
@@ -1395,7 +1395,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     <div>
       <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">SAVINGS & FINANCE (పొదుపు)</div>
       <div class="sidebar-menu-list">
-        <button class="sidebar-item active" data-target="view-home">
+        <button class="sidebar-item active" data-target="view-home" onclick="switchAppView('view-home'); return false;" ontouchend="switchAppView('view-home'); return false;">
           <span class="sidebar-item-icon">🏠</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Savings & Piggy Bank</div>
@@ -1403,7 +1403,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           </div>
         </button>
 
-        <button class="sidebar-item" data-target="view-history">
+        <button class="sidebar-item" data-target="view-history" onclick="switchAppView('view-history'); return false;" ontouchend="switchAppView('view-history'); return false;">
           <span class="sidebar-item-icon">📊</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">History & Heatmap</div>
@@ -1411,7 +1411,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           </div>
         </button>
 
-        <button class="sidebar-item" data-target="view-tools">
+        <button class="sidebar-item" data-target="view-tools" onclick="switchAppView('view-tools'); return false;" ontouchend="switchAppView('view-tools'); return false;">
           <span class="sidebar-item-icon">🧰</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Financial Calculators</div>
@@ -1419,7 +1419,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           </div>
         </button>
 
-        <button class="sidebar-item" data-target="view-fun">
+        <button class="sidebar-item" data-target="view-fun" onclick="switchAppView('view-fun'); return false;" ontouchend="switchAppView('view-fun'); return false;">
           <span class="sidebar-item-icon">🎮</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">AI Coach & Games</div>
@@ -1433,7 +1433,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
     <div>
       <div class="sidebar-section-title" style="font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#93c5fd;padding:2px 8px;display:flex;align-items:center;gap:6px">SYSTEM & PREFERENCES</div>
       <div class="sidebar-menu-list">
-        <button class="sidebar-item" data-target="view-settings">
+        <button class="sidebar-item" data-target="view-settings" onclick="switchAppView('view-settings'); return false;" ontouchend="switchAppView('view-settings'); return false;">
           <span class="sidebar-item-icon">👑</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Prabhas Voice Coach</div>
@@ -1441,7 +1441,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
           </div>
         </button>
 
-        <button class="sidebar-item" data-target="view-settings">
+        <button class="sidebar-item" data-target="view-settings" onclick="switchAppView('view-settings'); return false;" ontouchend="switchAppView('view-settings'); return false;">
           <span class="sidebar-item-icon">⚙️</span>
           <div class="sidebar-item-info">
             <div class="sidebar-item-title">Settings & Security</div>
@@ -1454,11 +1454,12 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 
   <div class="sidebar-footer" style="padding:12px 16px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:#94a3b8">
     <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-weight:700;color:#60a5fa">v2.7.1</span>
+      <span style="font-weight:700;color:#60a5fa">v2.7.2</span>
       <span>· Latest Edition ✅</span>
     </div>
     <div style="display:flex;gap:6px">
       <button onclick="toggleTheme()" style="width:auto;margin:0;padding:4px 8px;font-size:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:6px;color:#fff;cursor:pointer">🌓 Theme</button>
+      <button onclick="triggerAppUpdate()" style="width:auto;margin:0;padding:4px 8px;font-size:11px;background:rgba(59,130,246,0.3);border:1px solid #3b82f6;border-radius:6px;color:#93c5fd;cursor:pointer">🔄 Refresh</button>
     </div>
   </div>
 </aside>
@@ -1511,7 +1512,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 <!-- Header (Clean, uncluttered, always visible) -->
 <div class="hd">
   <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95">
-    <button id="btn-open-sidebar" onclick="openSidebar(); return false;" aria-label="Open Sidebar Menu" style="width:auto;margin:0;padding:5px 9px;background:rgba(255,255,255,.18);border-radius:9px;font-size:15px;border:1px solid rgba(255,255,255,0.25);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px">
+    <button id="btn-open-sidebar" onclick="openSidebar(event); return false;" ontouchend="openSidebar(event); return false;" aria-label="Open Sidebar Menu" style="width:auto;margin:0;padding:5px 9px;background:rgba(255,255,255,.18);border-radius:9px;font-size:15px;border:1px solid rgba(255,255,255,0.25);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px">
       <span style="font-size:16px;line-height:1">☰</span>
       <span style="font-size:11px;font-weight:700">Menu</span>
     </button>
@@ -2285,23 +2286,23 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
      BOTTOM NAVIGATION BAR (Stops Lengthy Scrolling)
 ========================================================== -->
 <nav id="bottom-nav">
-  <button class="nav-btn on" data-target="view-home">
+  <button class="nav-btn on" data-target="view-home" onclick="switchAppView('view-home'); return false;" ontouchend="switchAppView('view-home'); return false;">
     <span class="icon">🏠</span>
     <span>Home</span>
   </button>
-  <button class="nav-btn" data-target="view-writing">
+  <button class="nav-btn" data-target="view-writing" onclick="switchAppView('view-writing'); return false;" ontouchend="switchAppView('view-writing'); return false;">
     <span class="icon">✍️</span>
     <span>Write</span>
   </button>
-  <button class="nav-btn" data-target="view-ai-learn">
+  <button class="nav-btn" data-target="view-ai-learn" onclick="switchAppView('view-ai-learn'); return false;" ontouchend="switchAppView('view-ai-learn'); return false;">
     <span class="icon">🤖</span>
     <span>AI Learn</span>
   </button>
-  <button class="nav-btn" data-target="view-habits">
+  <button class="nav-btn" data-target="view-habits" onclick="switchAppView('view-habits'); return false;" ontouchend="switchAppView('view-habits'); return false;">
     <span class="icon">⏰</span>
     <span>Routine</span>
   </button>
-  <button class="nav-btn" id="btn-bottom-menu" onclick="openSidebar()">
+  <button class="nav-btn" id="btn-bottom-menu" onclick="openSidebar(event); return false;" ontouchend="openSidebar(event); return false;">
     <span class="icon">☰</span>
     <span>Menu</span>
   </button>
@@ -2397,7 +2398,21 @@ $("color-bar").onclick = e => {
   $("gcol").value = col;
   save();
   renderColorBar();
-  render();
+  
+// Auto-detect server updates immediately on launch
+try {
+  fetch("sw.js?t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.text())
+    .then(t => {
+      const m = t.match(/savings-v\d+[^"]+/);
+      if (m && m[0] && m[0] !== "savings-v19-bulletproof-sidebar") {
+        console.log("New server SW version:", m[0]);
+        if (typeof showUpdateToast === "function") showUpdateToast();
+      }
+    }).catch(()=>{});
+} catch(e) {}
+
+render();
 };
 
 // ==========================================================
@@ -2432,35 +2447,61 @@ document.querySelectorAll(".sidebar-item[data-target]").forEach(item => {
   };
 });
 
-// Sidebar open & close functions with robust inline fallback
-function openSidebar() {
+// Bulletproof Sidebar open & close functions
+function openSidebar(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
   const sb = $("sidebar-drawer");
   const bd = $("sidebar-backdrop");
   if (sb) {
+    sb.style.display = "flex";
+    sb.style.left = "0px";
+    sb.style.transform = "none";
+    sb.style.visibility = "visible";
+    sb.style.opacity = "1";
     sb.classList.add("open");
-    sb.style.transform = "translateX(0)";
   }
   if (bd) {
-    bd.classList.add("open");
     bd.style.display = "block";
-    bd.style.opacity = "1";
     bd.style.pointerEvents = "auto";
+    setTimeout(() => { bd.style.opacity = "1"; }, 10);
+    bd.classList.add("open");
   }
-  if (typeof updateSidebarProfile === "function") updateSidebarProfile();
+  try { updateSidebarProfile(); } catch(err) { console.warn(err); }
 }
 
-function closeSidebar() {
+function closeSidebar(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
   const sb = $("sidebar-drawer");
   const bd = $("sidebar-backdrop");
   if (sb) {
+    sb.style.display = "none";
     sb.classList.remove("open");
-    sb.style.transform = "translateX(-105%)";
   }
   if (bd) {
-    bd.classList.remove("open");
     bd.style.opacity = "0";
     bd.style.pointerEvents = "none";
+    bd.style.display = "none";
+    bd.classList.remove("open");
   }
+}
+
+function switchAppView(targetId) {
+  if (!targetId) return;
+  document.querySelectorAll(".nav-btn").forEach(b => {
+    b.classList.toggle("on", b.dataset.target === targetId);
+  });
+  document.querySelectorAll(".sidebar-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.target === targetId);
+  });
+  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("on"));
+  const vEl = $(targetId);
+  if (vEl) {
+    vEl.classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  closeSidebar();
 }
 
 function toggleTheme() {
@@ -2472,6 +2513,7 @@ function toggleTheme() {
 
 window.openSidebar = openSidebar;
 window.closeSidebar = closeSidebar;
+window.switchAppView = switchAppView;
 window.toggleTheme = toggleTheme;
 
 
@@ -3832,7 +3874,7 @@ if ($("home-quick-workout")) {
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.7.1";
+const CURRENT_APP_VERSION = "2.7.2";
 
 function showUpdateToast() {
   const toast = $("update-toast");
