@@ -1454,7 +1454,7 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
 
   <div class="sidebar-footer" style="padding:12px 16px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:#94a3b8">
     <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-weight:700;color:#60a5fa">v2.7.2</span>
+      <span style="font-weight:700;color:#60a5fa">v2.8.0</span>
       <span>· Latest Edition ✅</span>
     </div>
     <div style="display:flex;gap:6px">
@@ -1672,6 +1672,42 @@ table.pb td, table.pb th { padding: 8px 4px; border-bottom: 1px solid var(--bd);
       <div class="stat"><b id="today">₹0</b><span>Ee roju saved</span></div>
     </div>
     <div class="hint" id="need"></div>
+
+  <!-- Dynamic Catch-up & Missed Days Target Recovery Card -->
+  <div id="catchup-card" class="card" style="display:none;border:1.5px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.14) 0%,rgba(239,68,68,0.08) 100%);margin-bottom:14px;box-shadow:0 4px 20px rgba(245,158,11,0.15)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:18px">⚡</span>
+          <b style="font-size:14.5px;color:#fbbf24">Catch-Up Target (మిస్ అయిన రోజుల రికవరీ)</b>
+        </div>
+        <div id="catchup-subtitle" style="font-size:12px;color:#cbd5e1;margin-top:4px">
+          గోల్ సమయానికి రీచ్ అవ్వాలంటే ఈ రోజు సేవ్ చేయాల్సిన మొత్తం:
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:26px;font-weight:800;color:#f59e0b" id="catchup-amt-disp">₹0</div>
+        <span style="font-size:11px;color:#94a3b8" id="catchup-days-left">0 days left</span>
+      </div>
+    </div>
+
+    <!-- Formula Breakdown Pill -->
+    <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 12px;margin:10px 0;font-size:12px;color:#e2e8f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+      <span id="catchup-formula-text" style="font-weight:600">₹0 మిగిలింది ÷ 0 రోజులు = ₹0/రోజు</span>
+      <span id="catchup-missed-badge" style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:10px;font-weight:700;font-size:11px">0 Days Missed ⚠️</span>
+    </div>
+
+    <!-- Quick Action to Fill Catch-up Target into Pay Box -->
+    <div class="row" style="gap:8px">
+      <button id="btn-apply-catchup" style="flex:1;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;margin:0;padding:10px;border-radius:10px;font-size:13px">
+        ⚡ Auto-Fill Catch-up (₹0)
+      </button>
+      <button id="btn-pay-catchup-direct" style="flex:1;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;margin:0;padding:10px;border-radius:10px;font-size:13px">
+        🚀 Pay Catch-Up Now ✅
+      </button>
+    </div>
+  </div>
+
   </div>
 
   <div class="card">
@@ -2774,8 +2810,23 @@ function beep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(
 document.querySelector(".keys").onclick=e=>{const k=e.target.dataset.k;if(k==null)return;if(k==="del")cur=cur.slice(0,-1);else if(k==="."){if(!cur.includes("."))cur=(cur||"0")+"."}else if(cur.length<7)cur=(cur==="0"?"":cur)+k;upd()};
 $("q").onclick=e=>{const q=e.target.dataset.q;if(q){cur=String((parseFloat(cur)||0)+parseFloat(q));upd()}};
 
-$("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(!(a>0))return;
-  const g=G(),before=tot(g),t="SB"+Date.now().toString().slice(-8)+Math.floor(Math.random()*90+10);
+$("add").onclick=()=>{
+  let a = parseFloat($("amt").value), d = $("dt").value || TD;
+  if (!(a > 0)) return;
+  const g = G();
+  const cTarget = window._catchupTarget || 0;
+  
+  // Rule Enforcement: If saving less than the recalculated catch-up target, prompt user
+  if (cTarget > 0 && a < cTarget) {
+    const wantAdjust = confirm(`⚠️ Catch-Up Target Alert!\n\nఈ Goal సమయానికి రీచ్ అవ్వాలంటే ఈ రోజు కనీసం ₹${cTarget} సేవ్ చేయాలి.\n(మిస్ అయిన రోజులను లెక్కించి ఈ మొత్తం డివైడ్ చేయబడింది).\n\nమీరు ₹${a} మాత్రమే ఎంటర్ చేశారు.\n\n⚡ ₹${cTarget} కి ఆటో-అడ్జస్ట్ చేసి సేవ్ చేయాలా?`);
+    if (wantAdjust) {
+      a = cTarget;
+      cur = String(a);
+      upd();
+    }
+  }
+
+  const before = tot(g), t = "SB" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
   const tmv=$("tm").value||nowT();g.entries.push({id:Date.now(),date:d,time:tmv,amt:a,note:$("note").value.trim(),txn:t,src:$("src").value,md:$("md").value});$("tm").value=nowT();save();cur="";upd();$("note").value="";render();
   const done=before<g.target&&tot(g)>=g.target;
   count($("okamt"),a);$("oktx").textContent="Txn ID: "+t+" · "+d+" · "+h12(tmv);
@@ -2787,8 +2838,11 @@ $("add").onclick=()=>{const a=parseFloat($("amt").value),d=$("dt").value||TD;if(
   
   const uObj = users()[U] || {};
   const currentUserName = uObj.name || (U ? "Pavan Sai" : "Pavan Sai");
-  const maheshDialogue = `${a} rupees mee savings bank ki add ayindi, mee goal ${g.name} kosam... Super ${currentUserName}!`;
-  speakCelebrity("add_money", { amt: a, goalName: g.name });
+  if (cTarget > 0 && a >= cTarget) {
+    speakCelebrity("goal_complete", { amt: a, goalName: g.name });
+  } else {
+    speakCelebrity("add_money", { amt: a, goalName: g.name });
+  }
 };
 
 $("okd").onclick=()=>$("ok").classList.remove("on");
@@ -2834,12 +2888,81 @@ function extras(g,t,rem,D){
   const all=S.goals.reduce((a,x)=>a+tot(x),0);
   $("lvl").textContent=all>=2000?"💎 Diamond":all>=500?"🥇 Gold":all>=100?"🥈 Silver":"🥉 Bronze";
   $("bst").textContent=f(Math.max(0,...Object.values(by)));
-  let left=1;if(D>0){const dn=Math.round((new Date(TD+"T00:00:00")-new Date(g.start+"T00:00:00"))/864e5)+1;left=Math.max(D-Math.min(Math.max(dn,1),D)+1,1)}
-  const tg=Math.max(1,Math.ceil(D>0?rem/left:10)),td=Math.max(0,by[TD]||0);
-  window._tg=rem>0?tg:10;
-  $("dpb").style.width=Math.min(100,td/tg*100)+"%";
-  $("dtx").textContent="Daily target: "+f(td)+" / "+f(tg)+(td>=tg?" ✅ Done!":"");
-  $("qs").textContent="⚡ Quick save "+f(window._tg);
+
+  // Calculate Days Elapsed and Missed Days Count
+  const dn = Math.max(1, Math.round((new Date(TD+"T00:00:00") - new Date(g.start+"T00:00:00")) / 864e5) + 1);
+  
+  let missedDays = 0;
+  const startD = new Date(g.start + "T00:00:00");
+  const todayD = new Date(TD + "T00:00:00");
+  for (let c = new Date(startD); c < todayD; c.setDate(c.getDate() + 1)) {
+    const ds = iso(c);
+    const daySaved = by[ds] || 0;
+    if (daySaved <= 0 && !ns.includes(ds)) {
+      missedDays++;
+    }
+  }
+
+  // Meaningful Total Planned Days (If user didn't set D, use 30-day default pace so it NEVER defaults to 10 or 11!)
+  const totalDays = D > 0 ? D : Math.max(30, dn + 14);
+  const left = Math.max(1, totalDays - dn + 1);
+
+  // Exact Recalculated Catch-up Daily Target = Remaining Money ÷ Remaining Days
+  const catchupDaily = rem > 0 ? Math.ceil(rem / left) : 0;
+  window._catchupTarget = catchupDaily;
+  window._tg = catchupDaily > 0 ? catchupDaily : 10;
+
+  const td = Math.max(0, by[TD] || 0);
+  $("dpb").style.width = Math.min(100, (catchupDaily > 0 ? td / catchupDaily : 1) * 100) + "%";
+  $("dtx").textContent = "Daily target: " + f(td) + " / " + f(catchupDaily) + (td >= catchupDaily ? " ✅ Done!" : "");
+  $("qs").textContent = "⚡ Quick save " + f(window._tg);
+
+  // Update Catch-up Card UI
+  const cCard = $("catchup-card");
+  if (cCard) {
+    if (rem > 0) {
+      cCard.style.display = "block";
+      if ($("catchup-amt-disp")) $("catchup-amt-disp").textContent = "₹" + f(catchupDaily);
+      if ($("catchup-days-left")) $("catchup-days-left").textContent = left + " days left";
+      if ($("catchup-formula-text")) {
+        $("catchup-formula-text").textContent = "₹" + f(rem) + " ఇంకా కావాలి ÷ " + left + " రోజులు = ₹" + f(catchupDaily) + "/రోజు";
+      }
+      const mBadge = $("catchup-missed-badge");
+      if (mBadge) {
+        if (missedDays > 0) {
+          mBadge.textContent = missedDays + " Days Skipped ⚠️";
+          mBadge.style.background = "#ef4444";
+        } else {
+          mBadge.textContent = "On Track 🎯";
+          mBadge.style.background = "#10b981";
+        }
+      }
+      if ($("btn-apply-catchup")) {
+        $("btn-apply-catchup").textContent = "⚡ Auto-Fill Catch-up (₹" + f(catchupDaily) + ")";
+        $("btn-apply-catchup").onclick = () => {
+          cur = String(catchupDaily);
+          upd();
+          if ($("disp")) $("disp").scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+      }
+      if ($("btn-pay-catchup-direct")) {
+        $("btn-pay-catchup-direct").textContent = "🚀 Pay Catch-Up ₹" + f(catchupDaily) + " ✅";
+        $("btn-pay-catchup-direct").onclick = () => {
+          cur = String(catchupDaily);
+          upd();
+          $("add").click();
+        };
+      }
+    } else {
+      cCard.style.display = "none";
+    }
+  }
+
+  // Pre-fill amount with catchupDaily if cur is empty and goal still has remaining target
+  if (!cur && rem > 0 && catchupDaily > 0) {
+    cur = String(catchupDaily);
+    upd();
+  }
   $("ns").textContent=ns.includes(TD)?"✅ No-spend marked":"🎲 No-spend day";
   const Q=["Chinna chinna savings, pedda dreams! 💪","Roju ₹10 kuda oka month lo ₹300 avthundi 🪙","Kharchu mundu kaadu, save mundu! 🎯","Discipline unte dabbulu nee venake vasthayi 🐷","Ee roju save chesav ante, repu nee future happy 😊","Chai money kuda savings ki start 🍵","Streak break cheyyaku, oka rupee aina save chey 🔥"];
   $("qt").textContent=Q[Math.floor(Date.now()/864e5)%Q.length];
@@ -3874,7 +3997,7 @@ if ($("home-quick-workout")) {
 // ==========================================================
 // CONDITIONAL APP UPDATE NOTIFICATION POPUP (Hides when up to date!)
 // ==========================================================
-const CURRENT_APP_VERSION = "2.7.2";
+const CURRENT_APP_VERSION = "2.8.0";
 
 function showUpdateToast() {
   const toast = $("update-toast");
